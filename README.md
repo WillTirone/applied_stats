@@ -4,7 +4,7 @@ Creating a project to implement various statistical distributions and methods in
 To install and run this project, do the following:
 
 1. Clone the repository to your machine using 
-```git clone```
+```git clone https://github.com/WillTirone/Statistics_Module.git```
 
 2. install the dependencies
 ```pip install -r requirements.txt```
