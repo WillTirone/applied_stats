@@ -34,7 +34,7 @@ class Norm_rv:
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
-        npt.assert_equal(1, round(sum(self.pdf_value),2))
+        npt.assert_equal(1, round(sum(self.pdf_value),2)) #could add this to the testing file
 
     def plot_pdf(self, cv_probability=False):
 
@@ -61,13 +61,17 @@ class Norm_rv:
 
 
 class ChiSq_rv:
-    """Class for a Chi-squared random variable with k degrees of freedom
 
-        ChiSq_rv(deg_freedom, crit_value=0.0)
+    """
+    Class for a Chi-squared random variable with k degrees of freedom
 
-        As degrees of freedom increases to infinity, the Chi-squared distribution approximates a normal
-        distribution. You may notice that with >171 degrees of freedom, the math.gamma function returns a
-        range error as this is a very large number and exceeds the Python-allowed data type limit."""
+    ChiSq_rv(deg_freedom, crit_value=0.0)
+
+    As degrees of freedom increases to infinity, the Chi-squared distribution approximates a normal
+    distribution. You may notice that with >171 degrees of freedom, the math.gamma function returns a
+    range error as this is a very large number and exceeds the Python-allowed data type limit.
+    """
+
     def __init__(self, df, crit_value=0.0):
         if df > 0:
             self.df = df
@@ -111,5 +115,61 @@ class ChiSq_rv:
 
     def probability_calc(self):
         f = lambda x: (1/(m.gamma(self.df/2)*2**(self.df/2)))*x**((self.df/2)-1)*m.e**(-x/2)
+        self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
+        return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+
+class t_rv:
+    """
+    Class for a random variable with a t-distribution and v degrees of freedom
+
+    t_rv(deg_freedom, crit_value=0.0)
+
+    As degrees of freedom increases to infinity, the t distribution approximates a standard normal
+    distribution. You may notice that with >171 degrees of freedom, the math.gamma function returns a
+    range error as this is a very large number and exceeds the Python-allowed data type limit.
+    """
+    def __init__(self, df, crit_value=0.0):
+        if df > 0:
+            self.df = df
+        else:
+            raise ValueError('Degrees of freedom must be > 0')
+        self.crit_value = float(crit_value)
+        self.x_range = np.linspace(-2*self.df, 2*self.df, 2000)
+
+    def __repr__(self):
+        return f"t distribution with {self.df} degrees of freedom and critical value {self.crit_value}"
+
+    def pdf(self):
+
+        """
+        this is the probability density function (pdf) of a t distribution with v degrees of freedom.
+        To check that it is, in fact, a pdf, the y values must integrate to 1.
+        """
+
+        #TODO: this is being squared so the x-range isn't quite working to plot both sides
+        return m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**((self.df + 1) / 2))
+        npt.assert_equal(1, round(sum(self.pdf),2))
+
+    def plot_pdf(self, cv_probability=False):
+
+        """
+        this function takes a given t random variable, uses the pdf that was previously calculated,
+        and plots it.
+        """
+
+        plt.title(self.__repr__())
+        plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='purple',linewidth=3)
+        if cv_probability==False:
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.df,
+                          where=(self.x_range>self.df), color='purple', alpha=0.3)
+        else:
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
+                          where=(self.x_range>self.crit_value), color='purple', alpha=0.3)
+        plt.tight_layout()
+        plt.show()
+
+
+    def probability_calc(self):
+        f = lambda x: m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((x**2)/self.df))**((self.df + 1) / 2))
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
