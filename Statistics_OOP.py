@@ -7,11 +7,19 @@ import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
 
 class Norm_rv:
+
     """
-    Class to initialize a normal random variable with mean mu and variance sigma^2
+    Class to initialize a normal random variable with mean mu and variance
+    sigma^2
 
     Norm_rv(mean, variance, crit_value=0.0)
+
+    References
+    ----------
+    [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
+    pp 166 - 169 (2008).
     """
+
     def __init__(self, mean, variance, crit_value=0.0):
         self.mean = float(mean)
         self.sigma = float(m.sqrt(variance))
@@ -28,9 +36,10 @@ class Norm_rv:
     def pdf(self):
 
         """
-        this is the probability density function (pdf) of a normal distribution with mean mu and
-        variance sigma^2. To check that it is, in fact, a pdf, the y values must sum to 1. This
-        would theoretically be the integral from -infty to infty but is approximated here with a sum.
+        this is the probability density function (pdf) of a normal distribution
+        with mean mu and variance sigma^2. To check that it is, in fact, a pdf,
+        the y values must sum to 1. This would theoretically be the integral
+        from -infty to infty but is approximated here with a sum.
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
@@ -39,8 +48,8 @@ class Norm_rv:
     def plot_pdf(self, cv_probability=False):
 
         """
-        this function takes a given normal random variable, uses the pdf that was previously calculated,
-        and plots it.
+        this function takes a given normal random variable, uses the pdf that
+        was previously calculated, and plots it.
         """
 
         plt.title(self.__repr__())
@@ -55,6 +64,13 @@ class Norm_rv:
         plt.show()
 
     def probability_calc(self):
+
+        """
+        This calculates the probability to the LEFT of the critical value by
+        integrating the area under the distribution from negative infinity
+        to the critical value.
+        """
+
         f = lambda x: (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((x-self.mean)/self.sigma)**2)
         self.probability, self.error_est = integrate.quad(f,-np.inf,self.crit_value)
         return f"P(X<crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
@@ -67,9 +83,15 @@ class ChiSq_rv:
 
     ChiSq_rv(deg_freedom, crit_value=0.0)
 
-    As degrees of freedom increases to infinity, the Chi-squared distribution approximates a normal
-    distribution. You may notice that with >171 degrees of freedom, the math.gamma function returns a
-    range error as this is a very large number and exceeds the Python-allowed data type limit.
+    As degrees of freedom increases to infinity, the Chi-squared distribution
+    approximates a normal distribution. You may notice that with >171 degrees of
+    freedom, the math.gamma function returns a range error as this is a very
+    large number and exceeds the Python-allowed data type limit.
+
+    References
+    ----------
+    [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
+    pp 392 (2008).
     """
 
     def __init__(self, df, crit_value=0.0):
@@ -86,8 +108,9 @@ class ChiSq_rv:
     def pdf(self):
 
         """
-        this is the probability density function (pdf) of a chi squared distribution with k degrees of freedom.
-        To check that it is, in fact, a pdf, the y values must integrate to 1.
+        this is the probability density function (pdf) of a chi squared
+        distribution with k degrees of freedom.To check that it is, in fact,
+        a pdf, the y values must integrate to 1.
         """
 
         #TODO: add integration rather than sum approximation
@@ -97,8 +120,8 @@ class ChiSq_rv:
     def plot_pdf(self, cv_probability=False):
 
         """
-        this function takes a given Chi-squared random variable, uses the pdf that was previously calculated,
-        and plots it.
+        this function takes a given Chi-squared random variable, uses the pdf
+        that was previously calculated, and plots it.
         """
 
         plt.title(self.__repr__())
@@ -114,20 +137,35 @@ class ChiSq_rv:
 
 
     def probability_calc(self):
+
+        """
+        This calculates the probability to the RIGHT of the critical value by
+        integrating the area under the distribution from the critical value to
+        infinity.
+        """
+
         f = lambda x: (1/(m.gamma(self.df/2)*2**(self.df/2)))*x**((self.df/2)-1)*m.e**(-x/2)
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
 
 class t_rv:
+
     """
     Class for a random variable with a t-distribution and v degrees of freedom
 
     t_rv(deg_freedom, crit_value=0.0)
 
-    As degrees of freedom increases to infinity, the t distribution approximates a standard normal
-    distribution. You may notice that with >171 degrees of freedom, the math.gamma function returns a
-    range error as this is a very large number and exceeds the Python-allowed data type limit.
+    As degrees of freedom increases to infinity, the t distribution approximates
+    a standard normal distribution. You may notice that with >171 degrees of
+    freedom, the math.gamma function returns a range error as this is a very
+    large number and exceeds the Python-allowed data type limit.
+
+    References
+    ----------
+    [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
+    pp 396 (2008).
     """
+
     def __init__(self, df, crit_value=0.0):
         if df > 0:
             self.df = df
@@ -142,8 +180,9 @@ class t_rv:
     def pdf(self):
 
         """
-        this is the probability density function (pdf) of a t distribution with v degrees of freedom.
-        To check that it is, in fact, a pdf, the y values must integrate to 1.
+        this is the probability density function (pdf) of a t distribution with
+        v degrees of freedom. To check that it is, in fact, a pdf, the y values
+        must integrate to 1.
         """
 
         #TODO: this is being squared so the x-range isn't quite working to plot both sides
@@ -153,8 +192,8 @@ class t_rv:
     def plot_pdf(self, cv_probability=False):
 
         """
-        this function takes a given t random variable, uses the pdf that was previously calculated,
-        and plots it.
+        this function takes a given t random variable, uses the pdf that
+        was previously calculated, and plots it.
         """
 
         plt.title(self.__repr__())
@@ -170,6 +209,47 @@ class t_rv:
 
 
     def probability_calc(self):
+
+        """
+        This calculates the probability to the RIGHT of the critical value by
+        integrating the area under the distribution from the critical value
+        to infinity.
+        """
+
         f = lambda x: m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((x**2)/self.df))**((self.df + 1) / 2))
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+
+
+class F_rv:
+
+    """
+    Class for a random variable with an F distribution with v_1 and v_2
+    degrees of freedom with x > 0, v_2 >= 5. If v < 5, the Var(X) DNE and if
+    v_2 < 3, E(X) DNE.
+
+    F_rv(v_1, v_2, crit_value=0.0)
+
+    As degrees of freedom increases to infinity, the F distribution approximates
+    a standard normal distribution. You may notice that as degrees of
+    freedom grows large, the math.gamma function returns a range error
+    as this is a very large number and exceeds the Python-allowed data type
+    limit.
+
+    References
+    ----------
+    [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
+    pp 401 (2008).
+    """
+
+    def __init__(self, v_1, v_2, crit_value=0.0):
+        self.v_1 = v_1
+        if v_2 >= 5:
+            self.v_2 = v_2
+        else:
+            if v_2 < 3:
+                raise ValueError('with v_2 < 3, E(X) DNE')
+            else:
+                raise ValueError('with v_2 < 5, Var(X) DNE')
+        self.crit_value = float(crit_value)
+        self.x_range = np.linspace(0, 2*self.v_2, 2000)
