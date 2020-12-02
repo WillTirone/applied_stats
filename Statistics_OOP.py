@@ -69,6 +69,11 @@ class Norm_rv:
         This calculates the probability to the LEFT of the critical value by
         integrating the area under the distribution from negative infinity
         to the critical value.
+
+        Because the integration function needs a general x variable, and since
+        the pdf from Norm_rv.pdf is evaluated over a range of x-values to plot,
+        the normal pdf needs to be redefined in this method.This is true for
+        all the other distributions as well.
         """
 
         f = lambda x: (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((x-self.mean)/self.sigma)**2)
@@ -185,7 +190,6 @@ class t_rv:
         must integrate to 1.
         """
 
-        #TODO: this is being squared so the x-range isn't quite working to plot both sides
         return m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**((self.df + 1) / 2))
         npt.assert_equal(1, round(sum(self.pdf),2))
 
@@ -251,5 +255,48 @@ class F_rv:
                 raise ValueError('with v_2 < 3, E(X) DNE')
             else:
                 raise ValueError('with v_2 < 5, Var(X) DNE')
+        self.mean = (v_2 / (v_2 - 2))
         self.crit_value = float(crit_value)
         self.x_range = np.linspace(0, 2*self.v_2, 2000)
+
+    def __repr__(self):
+        return f"""F(v_1,v_2) distribution with v_1={self.v_1} , v_2={self.v_2}
+        degrees of freedom, mean {self.mean}, and critical value {self.crit_value}"""
+
+    def pdf(self):
+
+        """
+        this is the probability density function (pdf) of an F distribution with
+        v_1 and v_2 degrees of freedom. To check that it is, in fact, a pdf,
+        the y values must integrate to 1.
+        """
+
+        return (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * self.x_range**((self.v_1 /2) -1)) \
+        / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * (1 + (self.v_1 /self.v_2)*self.x_range)**((self.v_1 + self.v_2) / 2))
+        npt.assert_equal(1, round(sum(self.pdf),2))
+
+    def plot_pdf(self, cv_probability=False):
+
+        """
+        this function takes a given F random variable, uses the pdf that
+        was previously calculated, and plots it.
+        """
+
+        plt.title(self.__repr__())
+        plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='forestgreen',linewidth=3)
+        if cv_probability==False:
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.mean,
+                          where=(self.x_range>self.mean), color='forestgreen', alpha=0.3)
+        else:
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
+                          where=(self.x_range>self.crit_value), color='forestgreen', alpha=0.3)
+        plt.tight_layout()
+        plt.show()
+
+
+    # add probability calc here
+
+
+# add means and variances to other distributions and then add in __repr__
+a = F_rv(5,10)
+a.plot_pdf()
