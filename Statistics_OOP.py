@@ -104,6 +104,8 @@ class ChiSq_rv:
             self.df = df
         else:
             raise ValueError('Degrees of freedom must be > 0')
+        self.mean = self.df
+        self.variance = 2*self.df
         self.crit_value = float(crit_value)
         self.x_range = np.linspace(0, 5*self.df, 2000)
 
@@ -176,6 +178,17 @@ class t_rv:
             self.df = df
         else:
             raise ValueError('Degrees of freedom must be > 0')
+
+        if df >= 2:
+            self.mean = 0
+        else:
+            raise ValueError('E(X) DNE for df = 1')
+
+        if df >= 3:
+            self.variance = (self.df / (self.df - 2))
+        else:
+            raise ValueError('Var(X) DNE for df < 3')
+            
         self.crit_value = float(crit_value)
         self.x_range = np.linspace(-2*self.df, 2*self.df, 2000)
 
@@ -293,10 +306,15 @@ class F_rv:
         plt.tight_layout()
         plt.show()
 
+    def probability_calc(self):
 
-    # add probability calc here
+        """
+        This calculates the probability to the RIGHT of the critical value by
+        integrating the area under the distribution from the critical value
+        to infinity.
+        """
 
-
-# add means and variances to other distributions and then add in __repr__
-a = F_rv(5,10)
-a.plot_pdf()
+        f = lambda x: (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * x**((self.v_1 /2) -1)) \
+        / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * (1 + (self.v_1 /self.v_2)*x**((self.v_1 + self.v_2) / 2)))
+        self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
+        return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
