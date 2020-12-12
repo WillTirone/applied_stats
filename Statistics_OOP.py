@@ -179,16 +179,12 @@ class t_rv:
         else:
             raise ValueError('Degrees of freedom must be > 0')
 
-        if df >= 2:
-            self.mean = 0
-        else:
-            raise ValueError('E(X) DNE for df = 1')
-
         if df >= 3:
+            self.mean = 0
             self.variance = (self.df / (self.df - 2))
         else:
-            raise ValueError('Var(X) DNE for df < 3')
-            
+            raise ValueError('E(X) DNE for df = 1 and Var(X) DNE for df = {1,2}')
+
         self.crit_value = float(crit_value)
         self.x_range = np.linspace(-2*self.df, 2*self.df, 2000)
 
@@ -260,21 +256,30 @@ class F_rv:
     """
 
     def __init__(self, v_1, v_2, crit_value=0.0):
-        self.v_1 = v_1
+
+        if v_1 >0:
+            self.v_1 = v_1
+        else:
+            raise ValueError('v_1 must be > 0')
+
         if v_2 >= 5:
             self.v_2 = v_2
+            self.mean = self.v_2 / (self.v_2 - 2)
+            self.variance = (2*self.v_2**2 * (self.v_1 + self.v_2 -2)) \
+                            /((self.v_1)*(self.v_2 - 2)^2 * (self.v_2 -4))
         else:
             if v_2 < 3:
                 raise ValueError('with v_2 < 3, E(X) DNE')
             else:
                 raise ValueError('with v_2 < 5, Var(X) DNE')
-        self.mean = (v_2 / (v_2 - 2))
+
         self.crit_value = float(crit_value)
         self.x_range = np.linspace(0, 2*self.v_2, 2000)
 
     def __repr__(self):
         return f"""F(v_1,v_2) distribution with v_1={self.v_1} , v_2={self.v_2}
-        degrees of freedom, mean {self.mean}, and critical value {self.crit_value}"""
+        degrees of freedom, mean {round(self.mean,2)}, and critical value
+        {self.crit_value}"""
 
     def pdf(self):
 
