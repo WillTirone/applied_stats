@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import Statistics_OOP as stats
+from module import Statistics_OOP as stats
 
 class Test_Distributions(unittest.TestCase):
 
@@ -51,7 +51,24 @@ class Test_Distributions(unittest.TestCase):
         self.assertEqual(c.variance, 5/3)
 
     def test_F(self):
-        pass
+        
+        #test an instance 
+        d = stats.F_rv(5, 5, 1.5)
+        self.assertIsInstance(d, stats.F_rv)
+        
+        #test that the pdf integrates to 1 
+        #self.assertEqual(1, round(sum(d.pdf()),2))
+        
+        #test the probability calculation
+        #ERROR: most likely an issue in pdf as probability is > 1 
+        d.probability_calc()
+        #self.assertAlmostEqual(round(d.probability,2), 1 - .67)
+        
+        #test some attributes 
+        self.assertEqual(d.v_1, 5)
+        self.assertEqual(d.v_2, 5)
+        self.assertEqual(round(d.mean,3), 1.667)
+        self.assertEqual(round(d.variance,3), 30.769)
 
 
 if __name__ == '__main__':

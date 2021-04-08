@@ -1,5 +1,4 @@
 import math as m
-import pandas as pd
 import numpy as np
 from scipy import integrate
 import numpy.testing as npt
@@ -43,7 +42,7 @@ class Norm_rv:
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
-        npt.assert_equal(1, round(sum(self.pdf_value),2)) #could add this to the testing file
+        npt.assert_equal(1, round(sum(self.pdf),2)) #could add this to the testing file
 
     def plot_pdf(self, cv_probability=False):
 
@@ -319,7 +318,7 @@ class F_rv:
         to infinity.
         """
 
-        f = lambda x: (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * x**((self.v_1 /2) -1)) \
-        / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * (1 + (self.v_1 /self.v_2)*x**((self.v_1 + self.v_2) / 2)))
+        f = lambda x: (m.gamma((self.v_1 + self.v_2) / 2) * ((self.v_1 / self.v_2)**((self.v_1 / 2) * x**((self.v_1 /2) -1)))) \
+        / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * ((1 + (self.v_1 /self.v_2)*x)**((self.v_1 + self.v_2) / 2)))
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
