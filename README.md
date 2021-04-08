@@ -8,6 +8,7 @@ To install and run this project, do the following:
 
 2. install the dependencies
 ```pip install -r requirements.txt```
+- alternatively, use the [Anaconda installation](https://www.anaconda.com/) of Python 
 
 3. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/Demonstration.ipynb)
 
