@@ -10,7 +10,7 @@ To install and run this project, do the following:
 ```pip install -r requirements.txt```
 - alternatively, use the [Anaconda installation](https://www.anaconda.com/) of Python 
 
-3. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/Demonstration.ipynb)
+3. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/Demonstration.ipynb)
 
 4. To run the test file, from the command line enter: ```python test.py```
 
@@ -21,11 +21,11 @@ To install and run this project, do the following:
 >>> a.plot_pdf()
 >>> a.probability_calc()
 ```
-![link](https://github.com/WillTirone/Statistics_Module/blob/main/output_images/N(0%2C1)_plot.png)
+![link](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/output_images/N(0%2C1)_plot.png)
 
 ```python
 >>> q = ChiSq_rv(4,crit_value=7)
 >>> q.plot_pdf(cv_probability=True)
 >>> q.probability_calc()
 ```
-![link](https://github.com/WillTirone/Statistics_Module/blob/main/output_images/X-sqr(4).png)
+![link](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/output_images/X-sqr(4).png)
