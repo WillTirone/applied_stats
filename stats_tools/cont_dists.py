@@ -1,7 +1,8 @@
 import math as m
+
 import numpy as np
 from scipy import integrate
-import numpy.testing as npt
+from scipy.special import beta
 import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
 
@@ -42,7 +43,6 @@ class Norm_rv:
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
-        npt.assert_equal(1, round(sum(self.pdf),2)) #could add this to the testing file
 
     def plot_pdf(self, cv_probability=False):
 
@@ -121,7 +121,7 @@ class ChiSq_rv:
 
         #TODO: add integration rather than sum approximation
         return (1/(m.gamma(self.df/2)*2**(self.df/2)))*self.x_range**((self.df/2)-1)*m.e**(-self.x_range/2)
-        npt.assert_equal(1, round(sum(self.pdf),2))
+
 
     def plot_pdf(self, cv_probability=False):
 
@@ -199,7 +199,6 @@ class t_rv:
         """
 
         return m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**((self.df + 1) / 2))
-        npt.assert_equal(1, round(sum(self.pdf),2))
 
     def plot_pdf(self, cv_probability=False):
 
@@ -290,7 +289,6 @@ class F_rv:
 
         return (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * self.x_range**((self.v_1 /2) -1)) \
         / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * (1 + (self.v_1 /self.v_2)*self.x_range)**((self.v_1 + self.v_2) / 2))
-        npt.assert_equal(1, round(sum(self.pdf),2))
 
     def plot_pdf(self, cv_probability=False):
 
@@ -318,7 +316,9 @@ class F_rv:
         to infinity.
         """
 
-        f = lambda x: (m.gamma((self.v_1 + self.v_2) / 2) * ((self.v_1 / self.v_2)**((self.v_1 / 2) * x**((self.v_1 /2) -1)))) \
-        / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * ((1 + (self.v_1 /self.v_2)*x)**((self.v_1 + self.v_2) / 2)))
+        f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2) 
+                         * x**(self.v_1/2 -1))/
+                        ((self.v_2 +self.v_1*x)**((self.v_1 + self.v_2)/2) * 
+                        beta(self.v_1/2, self.v_2/2))) 
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"

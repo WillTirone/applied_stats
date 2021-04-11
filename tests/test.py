@@ -1,6 +1,11 @@
 import unittest
+import math as m 
+
 import numpy as np
-from module import Statistics_OOP as stats
+from scipy import integrate
+from scipy.special import beta
+
+from stats_tools import cont_dists as stats
 
 class Test_Distributions(unittest.TestCase):
 
@@ -13,7 +18,13 @@ class Test_Distributions(unittest.TestCase):
         #test the probability calculation
         a.probability_calc()
         self.assertAlmostEqual(a.probability, 0.5)
-
+        
+        #test that it is a pdf by integrating, it must = 1
+        f = lambda x: ((1/(a.sigma*m.sqrt(2*m.pi)))*
+                       m.e**((-1/2)*((x-a.mean)/a.sigma)**2))
+        a.probability, a.error_est = integrate.quad(f,-np.inf, np.inf)
+        self.assertAlmostEqual(a.probability, 1)
+    
         #testing attributes
         self.assertEqual(a.mean,0)
         self.assertEqual(a.variance,1)
@@ -28,6 +39,12 @@ class Test_Distributions(unittest.TestCase):
         #test the probability calculation
         b.probability_calc()
         self.assertAlmostEqual(round(b.probability,5), .13589)
+        
+        #test that it is a pdf by integrating, it must = 1
+        f = lambda x: ((1/(m.gamma(b.df/2)*2**(b.df/2)))
+                       *x**((b.df/2)-1)*m.e**(-x/2))
+        b.probability, b.error_est = integrate.quad(f,0,np.inf)
+        self.assertAlmostEqual(b.probability, 1)
 
         #test some attributes
         self.assertEqual(b.df, 4)
@@ -45,6 +62,13 @@ class Test_Distributions(unittest.TestCase):
         c.probability_calc()
         self.assertAlmostEqual(round(c.probability,5), 0.18161)
 
+        #test that it is a pdf by integrating, it must = 1
+        f = lambda x: (m.gamma((c.df+1)/2) / (m.sqrt(m.pi * c.df) * 
+                       m.gamma(c.df / 2) * (1 + ((x**2)/c.df))
+                       **((c.df + 1) / 2)))
+        c.probability, c.error_est = integrate.quad(f,-np.inf,np.inf)
+        self.assertAlmostEqual(c.probability, 1)
+
         #test some attributes
         self.assertEqual(c.df, 5)
         self.assertEqual(c.mean, 0)
@@ -56,13 +80,18 @@ class Test_Distributions(unittest.TestCase):
         d = stats.F_rv(5, 5, 1.5)
         self.assertIsInstance(d, stats.F_rv)
         
-        #test that the pdf integrates to 1 
-        #self.assertEqual(1, round(sum(d.pdf()),2))
-        
+
         #test the probability calculation
-        #ERROR: most likely an issue in pdf as probability is > 1 
         d.probability_calc()
-        #self.assertAlmostEqual(round(d.probability,2), 1 - .67)
+        #self.assertAlmostEqual(round(d.probability,2), 0.33)
+
+        #test that it is a pdf by integrating, it must = 1
+        f =  lambda x: ((d.v_2**(d.v_2/2) * d.v_1**(d.v_1/2) * 
+                         x**(d.v_1/2 -1))/
+                        ((d.v_2 +d.v_1*x)**((d.v_1 + d.v_2)/2) * 
+                        beta(d.v_1/2, d.v_2/2))) 
+        d.probability, d.error_est = integrate.quad(f,0,np.inf)
+        self.assertAlmostEqual(d.probability, 1)
         
         #test some attributes 
         self.assertEqual(d.v_1, 5)
