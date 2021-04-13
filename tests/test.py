@@ -5,8 +5,15 @@ import numpy as np
 from scipy import integrate
 from scipy.special import beta
 
-from stats_tools import cont_dists as stats
+import stats_tools.continuous_distributions as stats
+import stats_tools.mle as mle 
 
+# defining a random array and sample size for reproducible testing 
+rng = np.random.default_rng(1905)
+X_continuous = rng.random(100) * 100 
+n = len(X_continuous)
+
+# testing distribution calculations / attributes / methods 
 class Test_Distributions(unittest.TestCase):
 
     def test_norm(self):
@@ -99,6 +106,24 @@ class Test_Distributions(unittest.TestCase):
         self.assertEqual(round(d.mean,3), 1.667)
         self.assertEqual(round(d.variance,3), 30.769)
 
+# testing the MLE module to ensure accurate calculations 
+class Test_MLE(unittest.TestCase):
+
+    def test_uniform(self):
+
+        a = round(mle.uniform(X_continuous),4)
+        self.assertEqual(a, 99.0877)
+
+    def test_exponential(self): 
+        
+        b = round(mle.exponential(n, X_continuous),4)
+        self.assertEqual(b, 52.1989)
+
+    def test_normal(self): 
+        
+        c, d = mle.normal(n, X_continuous)
+        self.assertEqual(round(c,4), 52.1989)
+        self.assertEqual(round(d,4), 747.7962)
 
 if __name__ == '__main__':
     unittest.main()
