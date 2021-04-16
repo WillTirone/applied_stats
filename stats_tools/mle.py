@@ -29,21 +29,41 @@ Belmont (California): Brooks/Cole Cengage Learning pp 337 (2017)
 def uniform(X): 
     
     """
-    if x1,x2,..xn are an iid sample from U(0, theta), the MLE is the 
-    nth order statistic, X(n). That is, the largest value of the sample.
+    If X ~iid~ U(alpha, beta), that is, both alpha and beta unknown, the MLEs 
+    are the 1st and nth order statistics, X(i) and X(n). Thus, the smallest 
+    and largest values from the sample. 
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    uniform_mle : calculated MLE for the uniform distribution 
     
     References 
     ----------
-    [1] Sahoo, "Probability and Mathematical Statistics", pp 420
+    [1] Sahoo, "Probability and Mathematical Statistics", pp 423
     [2] Tone, MAT 562: Mathematical Statistics notes, U of L
     """
+    
+    alpha_mle = np.min(X)
+    beta_mle = np.max(X)
 
-    return np.max(X)
+    return alpha_mle, beta_mle
 
 def exponential(X):
     
     """
-    The MLE of the exponential distribution is X-bar, the sample mean.
+    If If x1,x2,...xn ~iid~ EXP(theta) the MLE, theta-hat is X-bar. 
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    exponential_mle : calculated MLE (theta-hat) the exponential distribution 
     
     References
     ----------
@@ -52,26 +72,31 @@ def exponential(X):
     """
 
     n = len(X)
+    exponential_mle = np.sum(X) / n 
     
-    return np.sum(X) / n
+    return exponential_mle
 
 def normal(X): 
     
     """
-    if X~N(mu, sigma^2), the MLEs are X-bar and (1/n)*sum(x_i - x-bar)^2 from i
-    to n. 
+    If x1,x2,...xn ~iid~ N(mu, sigma^2), (both mu and sigma^2 unknown) the MLEs
+    are X-bar and (1/n)*sum(x_i - x-bar)^2 from i to n. 
     
-    Returns a tuple of the MLE for mu, the mean, and the MLE for variance, the 
-    population variance.
+    Parameters
+    ----------
+    X : array_like 
     
-    (should adjust that formula to be rendered in LaTeX in the docs)
+    Returns: 
+    ----------
+    mu_mle, var_mle : a tuple of the MLEs for mu-hat and sigma^2-hat for 
+    N(mu, var)
     
     References
     ----------
     [1] Sahoo, "Probability and Mathematical Statistics", pp 422
     [2] Tone, MAT 562: Mathematical Statistics notes, U of L 
     """
-    
+    #cleaning calculations 
     X_array = np.array(X) 
     n = len(X_array)
     
@@ -81,36 +106,119 @@ def normal(X):
     return mu_mle, var_mle
 
 
+
 #discrete distributions: data values MUST countably finite, non-negative ints
 
-#TODO: put discrete value checker here 
+def discrete_check(X):
+    
+    """
+    Since the next section of MLEs need to be discrete, this will return True
+    if every data point is an integer
+    
+    Parameters
+    ----------
+    X : array like 
+    
+    Returns: 
+    ----------
+    a : boolean value 
+    """
 
+    _int_check = np.equal(np.mod(X,1),0)
+    a = np.all(_int_check)
+    return a 
 
+#discrete MLE calculations 
 def bernoulli(X): 
     
     """
-    sample proportion 
+    
+    If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution  
+    
+    References
+    ----------
+    [1] Casella, G., Berger, R. L., "Statistical Inference"
+    Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
     """
     
-    #we need to make sure that every data point is an integer
-    #if it is not, will throw an exception. This is accomplished mod division
     _input = np.array(X) 
-    _int_check = np.equal(np.mod(_input,1),0)
     n = len(_input)  
+    discrete_bool = discrete_check(_input)
+    bernoulli_mle = np.sum(X) / n 
     
-    if np.all(_int_check) == True:
-        return np.sum(X) / n 
+    if discrete_bool == True:
+        return bernoulli_mle 
     else:
         raise ValueError("X must be a discrete data set (only integers)")
 
 def binomial(X):
     
-    n = len(X) 
+    #TODO: fix this with k successes 
     
-    return np.sum(X) / n 
+    """
+    If x1,x2,...xn ~iid~ BIN(k,p) then the MLE is X-bar, the sample proportion 
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    binomial_mle : MLE calculation for p-hat for Binomial(k,p)  
+    
+    References
+    ----------
+    [1] Casella, G., Berger, R. L., "Statistical Inference"
+    Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
+    """
+    
+    _input = np.array(X) 
+    n = len(_input)  
+    discrete_bool = discrete_check(_input)
+    binomial_mle = np.sum(X) / n 
+    
+    if discrete_bool == True:
+        return binomial_mle 
+    else:
+        raise ValueError("X must be a discrete data set (only integers)")
 
-def geometric(): 
-    pass 
+def geometric(X): 
+    
+    """
+    If x1,x2,...xn ~iid~ GEO(p) then the MLE is 1 / X-bar
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    geometric_mle : MLE calculation for p-hat for GEO(p)  
+    
+    References
+    ----------
+    [1] Casella, G., Berger, R. L., "Statistical Inference"
+    Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
+    
+    """
+    
+    _input = np.array(X) 
+    n = len(_input)  
+    discrete_bool = discrete_check(_input)
+    binomial_mle = np.sum(X) / n 
+    
+    if discrete_bool == True:
+        return binomial_mle 
+    else:
+        raise ValueError("X must be a discrete data set (only integers)") 
 
 def poisson():
     pass 
