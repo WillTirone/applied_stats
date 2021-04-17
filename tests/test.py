@@ -11,6 +11,7 @@ import stats_tools.mle as mle
 # defining a random array and sample size for reproducible testing 
 rng = np.random.default_rng(1905)
 X_continuous = rng.random(100) * 100 
+X_discrete = np.round(X_continuous, 0)
 n = len(X_continuous)
 
 # testing distribution calculations / attributes / methods 
@@ -109,21 +110,43 @@ class Test_Distributions(unittest.TestCase):
 # testing the MLE module to ensure accurate calculations 
 class Test_MLE(unittest.TestCase):
 
+ #continuous distributions    
+
     def test_uniform(self):
 
-        a = round(mle.uniform(X_continuous),4)
-        self.assertEqual(a, 99.0877)
+        a, e = mle.uniform(X_continuous)
+        self.assertEqual(round(a,4), 0.0735) #alpha
+        self.assertEqual(round(e,4), 99.0877) #beta 
 
     def test_exponential(self): 
         
-        b = round(mle.exponential(n, X_continuous),4)
-        self.assertEqual(b, 52.1989)
+        b = round(mle.exponential(X_continuous),4) 
+        self.assertEqual(b, 52.1989) #theta 
 
     def test_normal(self): 
         
-        c, d = mle.normal(n, X_continuous)
-        self.assertEqual(round(c,4), 52.1989)
-        self.assertEqual(round(d,4), 747.7962)
+        c, d = mle.normal(X_continuous)
+        self.assertEqual(round(c,4), 52.1989) #mu 
+        self.assertEqual(round(d,4), 747.7962) #sigma^2
+
+# discrete distributions 
+
+    def test_bernoulli(self):
+        a = mle.bernoulli(X_discrete)
+        self.assertEqual(a, 52.22) #
+        
+    def test_binomial(self): 
+        b = mle.binomial(X_discrete) 
+        self.assertEqual(b, 52.22)
+    
+    def test_geometric(self): 
+        c = round(mle.geometric(X_discrete),5)
+        self.assertEqual(c, 0.01915)
+    
+    def test_poisson(self):
+        d = mle.poisson(X_discrete) 
+        self.assertEqual(d, 52.22) 
+
 
 if __name__ == '__main__':
     unittest.main()

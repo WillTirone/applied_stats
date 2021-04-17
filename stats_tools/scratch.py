@@ -1,9 +1,10 @@
+import numpy as np
 import mle 
-import numpy as np 
 
-b = [4,2,4,1,6,7]
-c = [4.5, 3.2, 1.2, 5.678, 4.3, 2]
+# defining a random array and sample size for reproducible testing 
+rng = np.random.default_rng(1905)
+X_continuous = rng.random(100) 
+X_discrete = np.round(X_continuous, 0)
+n = len(X_continuous)
 
-a = mle.bernoulli(b)
-
-print(a)
+q = np.random.binomial(10, 1, 50)

@@ -72,7 +72,7 @@ def exponential(X):
     """
 
     n = len(X)
-    exponential_mle = np.sum(X) / n 
+    exponential_mle = np.mean(X)
     
     return exponential_mle
 
@@ -100,11 +100,10 @@ def normal(X):
     X_array = np.array(X) 
     n = len(X_array)
     
-    mu_mle = np.sum(X) / n 
+    mu_mle = np.mean(X)
     var_mle = (1/n) * np.sum(np.square(X_array - mu_mle))
     
     return mu_mle, var_mle
-
 
 
 #discrete distributions: data values MUST countably finite, non-negative ints
@@ -127,7 +126,7 @@ def discrete_check(X):
     _int_check = np.equal(np.mod(X,1),0)
     a = np.all(_int_check)
     return a 
-
+    
 #discrete MLE calculations 
 def bernoulli(X): 
     
@@ -152,7 +151,7 @@ def bernoulli(X):
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)
-    bernoulli_mle = np.sum(X) / n 
+    bernoulli_mle = np.mean(X) 
     
     if discrete_bool == True:
         return bernoulli_mle 
@@ -183,7 +182,7 @@ def binomial(X):
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)
-    binomial_mle = np.sum(X) / n 
+    binomial_mle = np.mean(X) 
     
     if discrete_bool == True:
         return binomial_mle 
@@ -201,27 +200,61 @@ def geometric(X):
     
     Returns: 
     ----------
-    geometric_mle : MLE calculation for p-hat for GEO(p)  
+    geo_mle : MLE calculation for p-hat for GEO(p)  
     
     References
     ----------
     [1] Casella, G., Berger, R. L., "Statistical Inference"
-    Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
-    
+    Belmont (California): Brooks/Cole Cengage Learning (2017) 
+    [2] Tone, MAT 562: Mathematical Statistics notes, U of L 
     """
     
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)
-    binomial_mle = np.sum(X) / n 
+    geo_mle = 1 / np.mean(X)
     
     if discrete_bool == True:
-        return binomial_mle 
+        return geo_mle 
     else:
         raise ValueError("X must be a discrete data set (only integers)") 
 
-def poisson():
-    pass 
+def poisson(X):
+    
+    """
+    
+    If x1,x2,...xn ~iid~ POIS(lambda) then the MLE is X-bar
+    
+    Parameters
+    ----------
+    X : array_like 
+    
+    Returns: 
+    ----------
+    poisson_mle : MLE calculation for lambda-hat for POIS(p)  
+    
+    (Could not find a reference in the texts I was using, so found a derivation
+     on the website below)
+    
+    References
+    ----------
+    Taboga, M. (n.d.). Poisson distribution - maximum likelihood estimation. 
+    Retrieved April 17, 2021, from 
+    https://www.statlect.com/fundamentals-of-statistics/
+    Poisson-distribution-maximum-likelihood
+    """
+    
+    _input = np.array(X) 
+    n = len(_input)  
+    discrete_bool = discrete_check(_input)
+    poisson_mle = np.mean(X) 
+    
+    if discrete_bool == True:
+        return poisson_mle 
+    else:
+        raise ValueError("X must be a discrete data set (only integers)") 
+
+
     
     
     
