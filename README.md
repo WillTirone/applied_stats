@@ -4,21 +4,13 @@ Creating a project to implement various statistical distributions and methods in
 To install and run this project, do the following:
 1. Run the following to install: 
 
-```
-python 
+``` 
 pip install stats_tools 
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Or, clone the repo directly: 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a). Clone the repository to your machine using
-```
-git clone https://github.com/WillTirone/Statistics_Module.git
-```
-    
+2. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/Demonstration.ipynb)
 
-3. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/Demonstration.ipynb)
-
-4. To run the test file, from the command line enter: ```python test.py```
+3. To run the test file, from the command line enter: ```python test.py```
 
 ## Usage
 
@@ -41,8 +33,7 @@ git clone https://github.com/WillTirone/Statistics_Module.git
 
 ### To calculate the numeric MLE of several common distributions: 
 
-```
-python 
+```python 
 >>> from stats_tools import mle 
 >>> a = [1,3,2,5,6,7,2,3,4,5]
 >>> mle.binomial(a)
