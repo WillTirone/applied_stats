@@ -4,13 +4,16 @@ Creating a project to implement various statistical distributions and methods in
 To install and run this project, do the following:
 1. Run the following to install: 
 
-```python 
+```
+python 
 pip install stats_tools 
 ```
 
-    Or, clone the repo directly: 
-    a). Clone the repository to your machine using
-    ```git clone https://github.com/WillTirone/Statistics_Module.git```
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Or, clone the repo directly: 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a). Clone the repository to your machine using
+```
+git clone https://github.com/WillTirone/Statistics_Module.git
+```
     
 
 3. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/Demonstration.ipynb)
@@ -48,4 +51,4 @@ python
 >>> b = [1.2,4.3,2.3,6.8,2.4,3.6]
 >>> mle.exponential(b) 
 >>> 3.4333333333333336
-
+```
