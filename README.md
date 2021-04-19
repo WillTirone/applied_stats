@@ -19,9 +19,10 @@ pip install stats_tools
 
 ## Usage
 
-```python
->>> from stats_tools import *
+### To generate some plots and calculate some probabilities: 
 
+```python
+>>> from stats_tools import continuous_distributions
 >>> a = Norm_rv(0,1)
 >>> a.plot_pdf()
 >>> a.probability_calc()
@@ -34,3 +35,17 @@ pip install stats_tools
 >>> q.probability_calc()
 ```
 ![link](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/output_images/X-sqr(4).png)
+
+### To calculate the numeric MLE of several common distributions: 
+
+```
+python 
+>>> from stats_tools import mle 
+>>> a = [1,3,2,5,6,7,2,3,4,5]
+>>> mle.binomial(a)
+>>> 3.8
+>>> 
+>>> b = [1.2,4.3,2.3,6.8,2.4,3.6]
+>>> mle.exponential(b) 
+>>> 3.4333333333333336
+
