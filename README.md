@@ -38,7 +38,7 @@ pip install stats_tools
 >>> a = [1,3,2,5,6,7,2,3,4,5]
 >>> mle.binomial(a)
 >>> 3.8
->>> 
+
 >>> b = [1.2,4.3,2.3,6.8,2.4,3.6]
 >>> mle.exponential(b) 
 >>> 3.4333333333333336
