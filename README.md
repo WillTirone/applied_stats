@@ -22,14 +22,14 @@ pip install stats_tools
 >>> a.plot_pdf()
 >>> a.probability_calc()
 ```
-![link](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/output_images/N(0%2C1)_plot.png)
+![link](https://github.com/WillTirone/Statistics_Module/blob/main/output_images/N(0%2C1)_plot.png)
 
 ```python
 >>> q = ChiSq_rv(4,crit_value=7)
 >>> q.plot_pdf(cv_probability=True)
 >>> q.probability_calc()
 ```
-![link](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/output_images/X-sqr(4).png)
+![link](https://github.com/WillTirone/Statistics_Module/blob/main/output_images/X-sqr(4).png)
 
 ### To calculate the numeric MLE of several common distributions: 
 
