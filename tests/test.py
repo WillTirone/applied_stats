@@ -10,8 +10,8 @@ import numpy as np
 from scipy import integrate
 from scipy.special import beta
 
-from stats_tools import continuous_distributions as stats
-from stats_tools import mle  
+from applied_stats import continuous_distributions as stats
+from applied_stats import mle  
 
 
 # defining a random array and sample size for reproducible testing 

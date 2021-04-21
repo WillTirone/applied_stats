@@ -7,16 +7,16 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
-      name="applied_stats_tools",
+      name="applied_stats",
       version='0.0.1',
-      url='https://github.com/WillTirone/stats_tools',
+      url='https://github.com/WillTirone/applied_stats',
       author='William Tirone',
       author_email='will.tirone1@gmail.com', 
       description="A basic statistics module to compute MLEs / probabilities",
       long_description=long_description,
       long_description_content_type="text/markdown",
-      packages=find_packages(where='stats_tools'), #instead of py_modules? 
-      package_dir={'':"stats_tools"},
+      packages=find_packages(where='applied_stats'), #instead of py_modules? 
+      package_dir={'':"applied_stats"},
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
