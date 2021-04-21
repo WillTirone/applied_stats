@@ -7,7 +7,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
-      name="stats_tools",
+      name="applied_stats_tools",
       version='0.0.1',
       url='https://github.com/WillTirone/stats_tools',
       author='William Tirone',
