@@ -15,8 +15,7 @@ setup(
       description="A basic statistics module to compute MLEs / probabilities",
       long_description=long_description,
       long_description_content_type="text/markdown",
-      packages=find_packages(where='applied_stats'), #instead of py_modules? 
-      package_dir={'':"applied_stats"},
+      packages=find_packages(),
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
