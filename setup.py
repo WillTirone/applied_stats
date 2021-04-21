@@ -9,6 +9,9 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 setup(
       name="stats_tools",
       version='0.0.1',
+      url='https://github.com/WillTirone/stats_tools',
+      author='William Tirone',
+      author_email='will.tirone1@gmail.com', 
       description="A basic statistics module to compute MLEs / probabilities",
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -27,5 +30,7 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         "Operating System :: OS Independent"
         ],
-      install_requires = ['scipy ~= 1.3.0', 'numpy ~= 1',]
+      install_requires = ['scipy > 1',
+                          'numpy > 1', 
+                          'matplotlib > 3']
       )

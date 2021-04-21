@@ -1,12 +1,18 @@
 import unittest
 import math as m 
+import sys
+import os 
+
+#only necessary while the module is not installed in pckgs 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import numpy as np
 from scipy import integrate
 from scipy.special import beta
 
-import stats_tools.continuous_distributions as stats
-import stats_tools.mle as mle 
+from stats_tools import continuous_distributions as stats
+from stats_tools import mle  
+
 
 # defining a random array and sample size for reproducible testing 
 rng = np.random.default_rng(1905)
