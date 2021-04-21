@@ -5,7 +5,7 @@ To install and run this project, do the following:
 1. Run the following to install: 
 
 ``` 
-pip install stats_tools 
+pip install applied_stats
 ```
 
 2. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/Statistics_Module/blob/main/demonstrations/Demonstration.ipynb)
