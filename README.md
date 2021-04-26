@@ -1,20 +1,20 @@
 # Statistics_Module
-Creating a project to implement various statistical distributions and methods in Python.
 
-To install and run this project, do the following:
-1. Run the following to install: 
+A python library that implements various statistical distributions and methods in Python.
+
+## Installation
+
+Run the following to install the applied-stats:
 
 ``` 
 pip install applied-stats
 ```
 
-2. Follow these examples to start plotting and calculating probabilities. The examples below, and several others, can also be found in the  [Demonstration Jupyter Notebook](https://github.com/WillTirone/applied-stats_examples/blob/main/Demonstration.ipynb)
-
-3. To run the test file, from the command line enter: ```python test.py```
-
 ## Usage
 
-### To generate some plots and calculate some probabilities: 
+Follow these examples to start plotting and calculating probabilities. Various examples, including the ones below, can also be found in the [Demonstration Jupyter Notebook](https://github.com/WillTirone/applied-stats_examples/blob/main/Demonstration.ipynb)
+
+### Generate some plots and calculate some probabilities: 
 
 ```python
 >>> from applied_stats import continuous_distributions
@@ -31,7 +31,7 @@ pip install applied-stats
 ```
 ![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/X-sqr(4).png)
 
-### To calculate the numeric MLE of several common distributions: 
+### Calculate the numeric MLE of several common distributions: 
 
 ```python 
 >>> from stats_tools import mle 
@@ -43,3 +43,7 @@ pip install applied-stats
 >>> mle.exponential(b) 
 >>> 3.4333333333333336
 ```
+
+## Tests
+
+Run the tests from the command line with `python test.py`
