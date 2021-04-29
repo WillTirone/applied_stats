@@ -1,14 +1,20 @@
 # Statistics_Module
 
-A python library that implements various statistical distributions and methods in Python.
+A Python library that implements various statistical distributions and methods in Python. The continuous_distributions module supports plotting and calculating probabilities for normal, chi-squared, t, and F distributions, and the mle module can calculate various maximum likelihood estimators based on particular distributions. I plan to continue development of this to add new functionality and modules in the future. 
+
+The project was inspired while I took MAT 561 (Probability) and MAT 562 (Mathematical Statistics) at the University of Louisville. The goal of this is to provide simple tools to work with applied statistics, while also aiding my own understanding by applying theoretical techniques learned during class.
+
+Please feel free to submit PRs or Issues if you'd like!
 
 ## Installation
 
 Run the following to install the applied-stats:
 
 ``` 
-pip install applied-stats
+$ pip install applied-stats
 ```
+
+This has been tested on Windows 10 and Ubuntu 21.04; will test on macOS soon. 
 
 ## Usage
 
