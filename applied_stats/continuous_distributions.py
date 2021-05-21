@@ -28,7 +28,12 @@ class Norm_rv:
         else:
             raise ValueError('Enter a variance between 0 and infinity')
         self.crit_value = float(crit_value)
-        self.x_range = np.linspace(-4*self.variance, 4*self.variance, 500*self.variance)
+
+        #adding a scale as an int from variance to scale the plot properly and display the graph
+        plot_scale = int(self.variance)
+        self.x_range = np.linspace(round(-4*plot_scale),
+                                   round(4*plot_scale),
+                                   round(500*plot_scale))
 
     def __repr__(self):
         return f"Normal distribution with mean {self.mean}, variance {self.variance}, and critical value {self.crit_value}"
@@ -38,47 +43,89 @@ class Norm_rv:
         """
         this is the probability density function (pdf) of a normal distribution
         with mean mu and variance sigma^2. To check that it is, in fact, a pdf,
-        the y values must sum to 1. This would theoretically be the integral
-        from -infty to infty but is approximated here with a sum.
+        the y values must sum to 1.
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
 
-    def plot_pdf(self, cv_probability=False):
+    def plot_pdf(self, cv_probability=False, two_tail=False):
 
         """
-        this function takes a given normal random variable, uses the pdf that
+        This function takes a given normal random variable, uses the pdf that
         was previously calculated, and plots it.
+
+        By default, it shades the probability up to the mean. If a critical value
+        is passed and cv_probability=True, it will plot up to the critical value.
+        If two_tail=True is passed, it will shade the tails to the left and right of the critical values.
+        The critical value should be negative if you want it to shade both sides, as I have not yet
+        implemented a more flexible version of the shading and calculation.
+
+        Parameters
+        ----------
+        cv_probability : bool, default False. the critical value probability that determines the value the plot
+        is shaded up to. If False, shades up to the mean. If True, shades up to the critical value.
+
+        two_tail : bool, default False
+
+        Returns:
+        ----------
+        plt object
         """
+
+        def _left_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to,
+                              where=(self.x_range < fill_to), color='navy', alpha=0.3)
+
+        def _right_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to,
+                              where=(self.x_range > fill_to), color='navy', alpha=0.3)
 
         plt.title(self.__repr__())
         plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='blue',linewidth=3)
+
         if cv_probability==False:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.mean,
-                          where=(self.x_range<self.mean), color='navy', alpha=0.3)
-        else:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
-                          where=(self.x_range<self.crit_value), color='navy', alpha=0.3)
+            _left_fill_helper(self.mean)
+        elif (two_tail == True) & (cv_probability==True):
+            _left_fill_helper(self.crit_value)
+            _right_fill_helper(-self.crit_value)
+
         plt.tight_layout()
         plt.show()
 
-    def probability_calc(self):
+    def probability_calc(self, two_tail=False):
 
         """
-        This calculates the probability to the LEFT of the critical value by
-        integrating the area under the distribution from negative infinity
-        to the critical value.
+        This calculates either the probability to the left or both the right and
+        left tails.
 
         Because the integration function needs a general x variable, and since
         the pdf from Norm_rv.pdf is evaluated over a range of x-values to plot,
         the normal pdf needs to be redefined in this method.This is true for
         all the other distributions as well.
+
+        Probability and error estimate attributes are calculated.
+
+        Parameters
+        -----------
+        two_tail : bool, default False. If two_tail is True, it will simply multiple the
+        probability by 2. This is not too flexible yet, but will work for basic cases.
+
+        Returns:
+        -----------
+        f string with probability
         """
 
         f = lambda x: (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((x-self.mean)/self.sigma)**2)
         self.probability, self.error_est = integrate.quad(f,-np.inf,self.crit_value)
-        return f"P(X<crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
 
+        if two_tail == False:
+            return f"P(X<crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+        elif two_tail == True:
+            return (
+            f'P(X < left_crit value) & P(X > right_crit_value) is '
+            f' {2*round(self.probability,5)} with an error estimate of '
+            f'{round(self.error_est,5)}'
+            )
 
 class ChiSq_rv:
 
@@ -316,9 +363,9 @@ class F_rv:
         to infinity.
         """
 
-        f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2) 
+        f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2)
                          * x**(self.v_1/2 -1))/
-                        ((self.v_2 +self.v_1*x)**((self.v_1 + self.v_2)/2) * 
-                        beta(self.v_1/2, self.v_2/2))) 
+                        ((self.v_2 +self.v_1*x)**((self.v_1 + self.v_2)/2) *
+                        beta(self.v_1/2, self.v_2/2)))
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
         return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
