@@ -132,12 +132,20 @@ class ChiSq_rv:
     """
     Class for a Chi-squared random variable with k degrees of freedom
 
-    ChiSq_rv(deg_freedom, crit_value=0.0)
+    ChiSq_rv(deg_freedom)
 
     As degrees of freedom increases to infinity, the Chi-squared distribution
     approximates a normal distribution. You may notice that with >171 degrees of
     freedom, the math.gamma function returns a range error as this is a very
     large number and exceeds the Python-allowed data type limit.
+
+    Parameters
+    ----------
+    df : degrees of freedom, int
+
+    Returns
+    ----------
+    Instance of ChiSq_rv class
 
     References
     ----------
@@ -145,18 +153,21 @@ class ChiSq_rv:
     pp 392 (2008).
     """
 
-    def __init__(self, df, crit_value=0.0):
+    def __init__(self, df):
         if df > 0:
-            self.df = df
+            self.df = int(df)
         else:
             raise ValueError('Degrees of freedom must be > 0')
-        self.mean = self.df
-        self.variance = 2*self.df
-        self.crit_value = float(crit_value)
+        self.mean = df
+        self.variance = 2*df
         self.x_range = np.linspace(0, 5*self.df, 2000)
 
+        #initializing these variables so we can reassign values in later methods
+        # and so we don't need to run plot_pdf() every single time we want a probability
+        self.two_tail = False
+
     def __repr__(self):
-        return f"Chi-squared distribution with {self.df} degrees of freedom and critical value {self.crit_value}"
+        return f"Chi-squared distribution with {self.df} degrees of freedom."
 
     def pdf(self):
 
@@ -164,30 +175,70 @@ class ChiSq_rv:
         this is the probability density function (pdf) of a chi squared
         distribution with k degrees of freedom.To check that it is, in fact,
         a pdf, the y values must integrate to 1.
+
+        Parameters
+        ----------
+        Self
+
+        Returns
+        ----------
+        numpy.ndarray, pdf of a Chi Squared distribution evaluated over the range of x
+        values for plotting purposes
+
         """
 
-        #TODO: add integration rather than sum approximation
         return (1/(m.gamma(self.df/2)*2**(self.df/2)))*self.x_range**((self.df/2)-1)*m.e**(-self.x_range/2)
 
 
-    def plot_pdf(self, cv_probability=False):
+    def plot_pdf(self, left_cv=0, right_cv=0, cv_probability=False, two_tail=False):
 
         """
         this function takes a given Chi-squared random variable, uses the pdf
         that was previously calculated, and plots it.
+
+        Parameters
+        ----------
+        left_cv : float, left critical value used for the left tail, default = 0
+        right_cv :  float, right critical value used for the right tail, default = 0
+        cv_probability : bool, an argument to determine whether or not to use critical values. If
+        false, simply shades from degrees of freedom to infinity and calculates that probability. If true,
+        and two_tail = True, will shade two tails. Default = false.
+        two_tail : bool, used in combination with cv_probability will plot and shade two-tailed
+        chi squared distribution
+
+        Returns
+        ----------
+        None
+
         """
 
+        #helper functions to shade the areas of given probabilities
+        def _left_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to,
+                              where=(self.x_range < fill_to), color='red', alpha=0.3)
+
+        def _right_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to,
+                              where=(self.x_range > fill_to), color='red', alpha=0.3)
+
+        #plotting the function over the range of values
         plt.title(self.__repr__())
         plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='red',linewidth=3)
+
+        #reassigning some values from args to use in probability_calc()
+        self.two_tail = two_tail
+        self.left_cv = left_cv
+        self.right_cv = right_cv
+
+        #fill under the curve based on probability selection type
         if cv_probability==False:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.df,
-                          where=(self.x_range>self.df), color='red', alpha=0.3)
-        else:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
-                          where=(self.x_range>self.crit_value), color='red', alpha=0.3)
+            _right_fill_helper(self.df)
+        elif (two_tail==True) & (cv_probability==True):
+            _left_fill_helper(left_cv)
+            _right_fill_helper(right_cv)
+
         plt.tight_layout()
         plt.show()
-
 
     def probability_calc(self):
 
@@ -195,11 +246,37 @@ class ChiSq_rv:
         This calculates the probability to the RIGHT of the critical value by
         integrating the area under the distribution from the critical value to
         infinity.
+
+        Parameters
+        ----------
+        Self
+
+        Returns
+        ----------
+        self.probability if cv_probability = False, float
+        self.left_probability and self.right_probability if cv_probability = True, float
+
         """
 
+        #function to integrate, pdf of Chi Squared
         f = lambda x: (1/(m.gamma(self.df/2)*2**(self.df/2)))*x**((self.df/2)-1)*m.e**(-x/2)
-        self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
-        return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+
+        #calculate the probabilities.
+        if self.two_tail == False:
+            self.right_probability, self.right_error_est = integrate.quad(f,self.df,np.inf)
+            return ( f'P(X > df) is {round(self.right_probability,5)} with an error estimate of '
+            f'{round(self.right_error_est,5)}')
+        else:
+            self.left_probability, self.left_error_est = integrate.quad(f, 0, self.left_cv) #left tail
+            self.right_probability, self.right_error_est = integrate.quad(f, self.right_cv, np.inf) #right tail
+
+            self.total_probability = self.left_probability + self.right_probability
+            self.total_error = self.left_error_est + self.right_error_est
+
+            return ( f'P(X < left_critical_value) is {round(self.left_probability,5)} and P(X > right_crit_value) is '
+            f'{round(self.right_probability,5)}. Total probability is '
+            f'{round(self.total_probability,5)} with total error estimate '
+            f'{round(self.total_error)}')
 
 class t_rv:
 
