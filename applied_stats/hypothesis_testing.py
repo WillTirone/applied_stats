@@ -1,5 +1,5 @@
 import math as m
-from random import random
+import random as r
 import numpy as np
 
 import continuous_distributions as st
@@ -25,20 +25,25 @@ class norm_hyp(st.Norm_rv):
         self.z = (x - self.mean) / (self.variance)
         return self.z
 
+# based on example on p. 2 of hyp testing notes
+# based on example on p. 2 of hyp testing notes
 class gen_test:
 
         def __init__(self, data, H0):
-            self.data = np.array(data)
+            self.data = list(data)
             self.H0 = H0
-            self.results = {}
 
-        def run_test(self):
-            self.sample = random.sample(self.data, n)
+        def run_test(self, n, counter, accept_left, accept_right):
 
-            #redoing marble example as a base case
-            self.acceptance_region = [0,4]
-            self.rejection_region = [1,2,3]
+            sample = r.sample(self.data, n)
+            acceptance_region = {accept_left, accept_right}
+            rejection_region = (set(i for i in range(1, len(data)))
+                                .symmetric_difference(acceptance_region))
+            sample_count = sample.count(counter)
 
+            if sample_count in acceptance_region:
+                decision = f'Do not reject H0. Count is {sample_count}'
+            if sample_count in rejection_region:
+                decision = f'Reject the H0. Count is {sample_count}'
 
-        #TODO: every time we test something, add the result to a dictionary
-        #TODO: look at decorators, or things to juice up classes
+            return decision
