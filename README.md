@@ -37,6 +37,15 @@ Follow these examples to start plotting and calculating probabilities. Various e
 ```
 ![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/X-sqr(4).png)
 
+### Calculate a two-tailed Chi-Sq distribution and plot: 
+
+```python 
+>>> z = st.ChiSq_rv(3)
+>>> z.plot_pdf(left_cv=1, right_cv=7, cv_probability=True, two_tail=True)
+>>> z.probability_calc()
+```
+![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/two_tailed_chi_sq.PNG)
+
 ### Calculate the numeric MLE of several common distributions: 
 
 ```python 
