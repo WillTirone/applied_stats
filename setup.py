@@ -8,10 +8,10 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
       name="applied_stats",
-      version='0.0.3',
+      version='0.1.0',
       url='https://github.com/WillTirone/applied_stats',
       author='William Tirone',
-      author_email='will.tirone1@gmail.com', 
+      author_email='will.tirone1@gmail.com',
       description="A basic statistics module to compute MLEs / probabilities",
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -30,6 +30,6 @@ setup(
         "Operating System :: OS Independent"
         ],
       install_requires = ['scipy > 1',
-                          'numpy > 1', 
+                          'numpy > 1',
                           'matplotlib > 3']
       )
