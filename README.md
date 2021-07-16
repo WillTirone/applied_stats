@@ -44,7 +44,7 @@ Follow these examples to start plotting and calculating probabilities. Various e
 >>> z.plot_pdf(left_cv=1, right_cv=7, cv_probability=True, two_tail=True)
 >>> z.probability_calc()
 ```
-![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/two_tailed_chi_sq.PNG)
+![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/two_tailed_chi_sq_full.PNG)
 
 ### Calculate the numeric MLE of several common distributions: 
 
