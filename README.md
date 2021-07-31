@@ -59,6 +59,19 @@ Follow these examples to start plotting and calculating probabilities. Various e
 >>> 3.4333333333333336
 ```
 
+### A basic hypothesis test 
+
+```python 
+>>> data = ['R', 'B', 'R', 'B', 'R', 'B', 'R', 'B', 'R', 'B']
+>>> a = gen_test(data, 'H0 is that there are 5 red marbles in a bag')
+>>> a.run_test(n=4, 
+           counter='R', 
+           accept_left=3, 
+           accept_right=4)
+           
+>>> 'Do not reject H0. Count is 3'
+```
+
 ## Tests
 
 Run the tests from the command line with `python test.py`
