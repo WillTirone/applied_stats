@@ -6,7 +6,30 @@ import continuous_distributions as st
 
 class norm_hyp(st.Norm_rv):
 
-    def __init__(self, mean, variance, H0, HA, type):
+    def __init__(self, mean, variance, H0, HA, test_type='simple'):
+        
+        """
+        Initialize a normal random variable hypothesis test class
+
+        Parameters
+        ----------
+        data : array-like, a list of data to draw from. 
+
+        H0 : str, the null hypothesis to test. This does not have to be
+        anything in particular as of right now.
+        
+        HA : str, the alternative hypotethis to test
+        
+        test_type : str, simple or complex, defaults=simple
+        
+        Returns
+        ---------
+        None
+        
+        Notes
+        ---------
+        
+        """
 
         # might not want a mean if that's what we're testing,
         # we wouldn't know the mean in advance
@@ -16,11 +39,32 @@ class norm_hyp(st.Norm_rv):
         self.std_dev = m.sqrt(variance)
         self.H0 = H0
         self.HA = HA
-        self.type = type # simple or compound test
+        self.type = test_type # simple or compound test
 
     def z_score(self, x):
 
-        """calculate a z score"""
+        """Calculate a z score
+        
+        Parameters
+        ----------
+        data : array-like, a list of data to draw from. 
+
+        H0 : str, the null hypothesis to test. This does not have to be
+        anything in particular as of right now.
+        
+        HA : str, the alternative hypotethis to test
+        
+        test_type : str, simple or complex, defaults=simple
+        
+        Returns
+        ---------
+        None
+        
+        Notes
+        ---------  
+        
+        
+        """
 
         self.z = (x - self.mean) / (self.variance)
         return self.z
@@ -35,12 +79,21 @@ class gen_test:
 
             Parameters
             ----------
-            data : array-like, a list of data to draw from. I based this on
-            something simple like the classic probability problem of drawing
-            marbles from a bag and seeing how many were of a certain color.
+            data : array-like, a list of data to draw from. 
 
             H0 : string, the null hypothesis to test. This does not have to be
             anything in particular as of right now.
+            
+            Returns
+            ---------
+            None
+            
+            Notes
+            ---------
+            I based this on something simple like the classic probability 
+            problem of drawing marbles from a bag and seeing how many were of 
+            a certain color.
+            
             """
 
             self.data = list(data)
@@ -65,7 +118,10 @@ class gen_test:
 
             Returns:
             ----------
-            string, the decision made based on the sample drawn
+            decision : str, the decision made based on the sample drawn
+            
+            Notes
+            ----------
             """
 
             ## BUG: for some reason, fails if sample size is 1 

@@ -28,18 +28,21 @@ Belmont (California): Brooks/Cole Cengage Learning pp 337 (2017)
 
 def uniform(X): 
     
-    """
-    If X ~iid~ U(alpha, beta), that is, both alpha and beta unknown, the MLEs 
-    are the 1st and nth order statistics, X(i) and X(n). Thus, the smallest 
-    and largest values from the sample. 
-    
+    """Calculated MLE for a uniform distribution.
+   
     Parameters
     ----------
     X : array_like 
     
     Returns: 
     ----------
-    uniform_mle : calculated MLE for the uniform distribution 
+    uniform_mle : float / int, calculated MLE for the uniform distribution 
+    
+    Notes
+    ---------
+    If X ~iid~ U(alpha, beta), that is, both alpha and beta unknown, the MLEs 
+    are the 1st and nth order statistics, X(i) and X(n). Thus, the smallest 
+    and largest values from the sample. 
     
     References 
     ----------
@@ -54,9 +57,8 @@ def uniform(X):
 
 def exponential(X):
     
-    """
-    If If x1,x2,...xn ~iid~ EXP(theta) the MLE, theta-hat is X-bar. 
-    
+    """Calculated MLE of an exponential distribution.
+     
     Parameters
     ----------
     X : array_like 
@@ -64,6 +66,10 @@ def exponential(X):
     Returns: 
     ----------
     exponential_mle : calculated MLE (theta-hat) the exponential distribution 
+    
+    Notes
+    ---------
+    If If x1,x2,...xn ~iid~ EXP(theta) the MLE, theta-hat is X-bar.
     
     References
     ----------
@@ -78,10 +84,8 @@ def exponential(X):
 
 def normal(X): 
     
-    """
-    If x1,x2,...xn ~iid~ N(mu, sigma^2), (both mu and sigma^2 unknown) the MLEs
-    are X-bar and (1/n)*sum(x_i - x-bar)^2 from i to n. 
-    
+    """MLE (mean and variance) of a normal distribution.
+     
     Parameters
     ----------
     X : array_like 
@@ -90,6 +94,11 @@ def normal(X):
     ----------
     mu_mle, var_mle : a tuple of the MLEs for mu-hat and sigma^2-hat for 
     N(mu, var)
+    
+    Notes
+    ---------
+    If x1,x2,...xn ~iid~ N(mu, sigma^2), (both mu and sigma^2 unknown) the MLEs
+    are X-bar and (1/n)*sum(x_i - x-bar)^2 from i to n.
     
     References
     ----------
@@ -130,9 +139,7 @@ def discrete_check(X):
 #discrete MLE calculations 
 def bernoulli(X): 
     
-    """
-    
-    If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
+    """MLE of a Bernoulli distribution. 
     
     Parameters
     ----------
@@ -140,7 +147,11 @@ def bernoulli(X):
     
     Returns: 
     ----------
-    bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution  
+    bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution
+    
+    Notes
+    ---------
+    If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
     
     References
     ----------
@@ -162,8 +173,7 @@ def binomial(X):
     
     #TODO: fix this with k successes 
     
-    """
-    If x1,x2,...xn ~iid~ BIN(k,p) then the MLE is X-bar, the sample proportion 
+    """MLE of a binomial distribution. 
     
     Parameters
     ----------
@@ -173,17 +183,21 @@ def binomial(X):
     ----------
     binomial_mle : MLE calculation for p-hat for Binomial(k,p)  
     
+    Notes
+    ---------
+    If x1,x2,...xn ~iid~ BIN(k,p) then the MLE is X-bar, the sample proportion 
+    
     References
     ----------
     [1] Casella, G., Berger, R. L., "Statistical Inference"
     Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
     """
-    
+
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)
     binomial_mle = np.mean(X) 
-    
+
     if discrete_bool == True:
         return binomial_mle 
     else:
@@ -191,16 +205,19 @@ def binomial(X):
 
 def geometric(X): 
     
-    """
-    If x1,x2,...xn ~iid~ GEO(p) then the MLE is 1 / X-bar
-    
+    """MLE of a geometric distribution.
+
     Parameters
     ----------
     X : array_like 
-    
+
     Returns: 
     ----------
-    geo_mle : MLE calculation for p-hat for GEO(p)  
+    geo_mle : MLE calculation for p-hat for GEO(p)
+
+    Notes
+    ---------
+    If x1,x2,...xn ~iid~ GEO(p) then the MLE is 1 / X-bar
     
     References
     ----------
@@ -208,12 +225,12 @@ def geometric(X):
     Belmont (California): Brooks/Cole Cengage Learning (2017) 
     [2] Tone, MAT 562: Mathematical Statistics notes, U of L 
     """
-    
+
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)
     geo_mle = 1 / np.mean(X)
-    
+
     if discrete_bool == True:
         return geo_mle 
     else:
@@ -221,21 +238,23 @@ def geometric(X):
 
 def poisson(X):
     
-    """
-    
-    If x1,x2,...xn ~iid~ POIS(lambda) then the MLE is X-bar
-    
+    """MLE of a Poisson distribution.
+
     Parameters
     ----------
     X : array_like 
-    
+
     Returns: 
     ----------
-    poisson_mle : MLE calculation for lambda-hat for POIS(p)  
+    poisson_mle : float, MLE calculation for lambda-hat for POIS(p)  
+
+    Notes
+    ---------
+    If x1,x2,...xn ~iid~ POIS(lambda) then the MLE is X-bar.
     
-    (Could not find a reference in the texts I was using, so found a derivation
-     on the website below)
-    
+    Could not find a reference in the texts I was using, so found a derivation
+    on the website below.
+
     References
     ----------
     Taboga, M. (n.d.). Poisson distribution - maximum likelihood estimation. 
@@ -243,7 +262,7 @@ def poisson(X):
     https://www.statlect.com/fundamentals-of-statistics/
     Poisson-distribution-maximum-likelihood
     """
-    
+
     _input = np.array(X) 
     n = len(_input)  
     discrete_bool = discrete_check(_input)

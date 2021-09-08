@@ -40,10 +40,21 @@ class Norm_rv:
 
     def pdf(self):
 
-        """
-        this is the probability density function (pdf) of a normal distribution
-        with mean mu and variance sigma^2. To check that it is, in fact, a pdf,
-        the y values must sum to 1.
+        """probability density function (pdf) of a normal distribution
+        with mean mu and variance sigma^2. 
+        
+        Parameters
+        ----------
+        Self
+
+        Returns
+        ----------
+        numpy.ndarray, pdf of a normal distribution evaluated over the range of x
+        values for plotting purposes
+        
+        Notes
+        ----------
+        To check that it is, in fact, a pdf, the y values must sum to 1.
         """
 
         return (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((self.x_range-self.mean)/self.sigma)**2)
@@ -54,12 +65,6 @@ class Norm_rv:
         This function takes a given normal random variable, uses the pdf that
         was previously calculated, and plots it.
 
-        By default, it shades the probability up to the mean. If a critical value
-        is passed and cv_probability=True, it will plot up to the critical value.
-        If two_tail=True is passed, it will shade the tails to the left and right of the critical values.
-        The critical value should be negative if you want it to shade both sides, as I have not yet
-        implemented a more flexible version of the shading and calculation.
-
         Parameters
         ----------
         cv_probability : bool, default False. the critical value probability that determines the value the plot
@@ -67,9 +72,18 @@ class Norm_rv:
 
         two_tail : bool, default False
 
-        Returns:
+        Returns
         ----------
-        plt object
+        None, plt object displayed
+        
+        Notes
+        ----------
+        By default, it shades the probability up to the mean. If a critical 
+        value is passed and cv_probability=True, it will plot up to the 
+        critical value. If two_tail=True is passed, it will shade the tails to
+        the left and right of the critical values. The critical value should be
+        negative if you want it to shade both sides, as I have not yet 
+        implemented a more flexible version of the shading and calculation.
         """
 
         def _left_fill_helper(fill_to):
@@ -98,11 +112,6 @@ class Norm_rv:
         This calculates either the probability to the left or both the right and
         left tails.
 
-        Because the integration function needs a general x variable, and since
-        the pdf from Norm_rv.pdf is evaluated over a range of x-values to plot,
-        the normal pdf needs to be redefined in this method.This is true for
-        all the other distributions as well.
-
         Probability and error estimate attributes are calculated.
 
         Parameters
@@ -112,7 +121,14 @@ class Norm_rv:
 
         Returns:
         -----------
-        f string with probability
+        str, f string with probability
+        
+        Notes
+        ----------
+        Because the integration function needs a general x variable, and since
+        the pdf from Norm_rv.pdf is evaluated over a range of x-values to plot,
+        the normal pdf needs to be redefined in this method.This is true for
+        all the other distributions as well.
         """
 
         f = lambda x: (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((x-self.mean)/self.sigma)**2)
@@ -135,8 +151,8 @@ class ChiSq_rv:
     ChiSq_rv(deg_freedom)
 
     As degrees of freedom increases to infinity, the Chi-squared distribution
-    approximates a normal distribution. You may notice that with >171 degrees of
-    freedom, the math.gamma function returns a range error as this is a very
+    approximates a normal distribution. You may notice that with >171 degrees 
+    of freedom, the math.gamma function returns a range error as this is a very
     large number and exceeds the Python-allowed data type limit.
 
     Parameters
@@ -146,6 +162,13 @@ class ChiSq_rv:
     Returns
     ----------
     Instance of ChiSq_rv class
+    
+    Notes
+    ----------
+    As degrees of freedom increases to infinity, the Chi-squared distribution
+    approximates a normal distribution. You may notice that with >171 degrees 
+    of freedom, the math.gamma function returns a range error as this is a very
+    large number and exceeds the Python-allowed data type limit.
 
     References
     ----------
@@ -172,9 +195,8 @@ class ChiSq_rv:
     def pdf(self):
 
         """
-        this is the probability density function (pdf) of a chi squared
-        distribution with k degrees of freedom.To check that it is, in fact,
-        a pdf, the y values must integrate to 1.
+        This is the probability density function (pdf) of a chi squared
+        distribution with k degrees of freedom.
 
         Parameters
         ----------
@@ -184,7 +206,11 @@ class ChiSq_rv:
         ----------
         numpy.ndarray, pdf of a Chi Squared distribution evaluated over the range of x
         values for plotting purposes
-
+        
+        Notes
+        ----------
+        To check that it is, in fact,a pdf, the y values must integrate to 1.
+        
         """
 
         return (1/(m.gamma(self.df/2)*2**(self.df/2)))*self.x_range**((self.df/2)-1)*m.e**(-self.x_range/2)
@@ -193,22 +219,25 @@ class ChiSq_rv:
     def plot_pdf(self, left_cv=0, right_cv=0, cv_probability=False, two_tail=False):
 
         """
-        this function takes a given Chi-squared random variable, uses the pdf
+        This function takes a given Chi-squared random variable, uses the pdf
         that was previously calculated, and plots it.
 
         Parameters
         ----------
         left_cv : float, left critical value used for the left tail, default = 0
+        
         right_cv :  float, right critical value used for the right tail, default = 0
+        
         cv_probability : bool, an argument to determine whether or not to use critical values. If
         false, simply shades from degrees of freedom to infinity and calculates that probability. If true,
         and two_tail = True, will shade two tails. Default = false.
+        
         two_tail : bool, used in combination with cv_probability will plot and shade two-tailed
         chi squared distribution
 
         Returns
         ----------
-        None
+        None, plt object displayed
 
         """
 
@@ -253,8 +282,10 @@ class ChiSq_rv:
 
         Returns
         ----------
-        self.probability if cv_probability = False, float
-        self.left_probability and self.right_probability if cv_probability = True, float
+        str, f string with self.probability if cv_probability = False
+        
+        str, f string with self.left_probability and self.right_probability
+        if cv_probability = True
 
         """
 
@@ -284,7 +315,9 @@ class t_rv:
     Class for a random variable with a t-distribution and v degrees of freedom
 
     t_rv(deg_freedom, crit_value=0.0)
-
+    
+    Notes
+    ----------
     As degrees of freedom increases to infinity, the t distribution approximates
     a standard normal distribution. You may notice that with >171 degrees of
     freedom, the math.gamma function returns a range error as this is a very
@@ -294,6 +327,7 @@ class t_rv:
     ----------
     [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
     pp 396 (2008).
+    
     """
 
     def __init__(self, df, crit_value=0.0):
@@ -318,8 +352,20 @@ class t_rv:
 
         """
         this is the probability density function (pdf) of a t distribution with
-        v degrees of freedom. To check that it is, in fact, a pdf, the y values
-        must integrate to 1.
+        v degrees of freedom. 
+        
+        Parameters
+        ----------
+        Self
+
+        Returns
+        ----------
+        numpy.ndarray, pdf of a t distribution evaluated over the range of x
+        values for plotting purposes
+        
+        Notes
+        ----------
+        To check that it is, in fact, a pdf, the y values must integrate to 1.
         """
 
         return m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**((self.df + 1) / 2))
@@ -327,8 +373,19 @@ class t_rv:
     def plot_pdf(self, cv_probability=False):
 
         """
-        this function takes a given t random variable, uses the pdf that
+        This function takes a given t random variable, uses the pdf that
         was previously calculated, and plots it.
+
+        Parameters
+        ----------
+        cv_probability : bool, default False. the critical value probability 
+        that determines the value the plot is shaded from. If False, shades 
+        from the df to positive infinity. If True, shades from the critical 
+        value.
+
+        Returns
+        ----------
+        None, plt object displayed
         """
 
         plt.title(self.__repr__())
@@ -349,6 +406,14 @@ class t_rv:
         This calculates the probability to the RIGHT of the critical value by
         integrating the area under the distribution from the critical value
         to infinity.
+        
+        Parameters
+        -----------
+        self
+
+        Returns:
+        -----------
+        str, f string with probability
         """
 
         f = lambda x: m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((x**2)/self.df))**((self.df + 1) / 2))
@@ -365,6 +430,8 @@ class F_rv:
 
     F_rv(v_1, v_2, crit_value=0.0)
 
+    Notes
+    ----------
     As degrees of freedom increases to infinity, the F distribution approximates
     a standard normal distribution. You may notice that as degrees of
     freedom grows large, the math.gamma function returns a range error
@@ -375,6 +442,8 @@ class F_rv:
     ----------
     [1] Sahoo, Prasanna. "Probability and Mathematical Statistics",
     pp 401 (2008).
+    
+    
     """
 
     def __init__(self, v_1, v_2, crit_value=0.0):
@@ -407,8 +476,20 @@ class F_rv:
 
         """
         this is the probability density function (pdf) of an F distribution with
-        v_1 and v_2 degrees of freedom. To check that it is, in fact, a pdf,
-        the y values must integrate to 1.
+        v_1 and v_2 degrees of freedom.
+
+        Parameters
+        ----------
+        Self
+
+        Returns
+        ----------
+        numpy.ndarray, pdf of an F distribution evaluated over the range of x
+        values for plotting purposes
+
+        Notes
+        ----------
+        To check that it is, in fact, a pdf, the y values must integrate to 1.
         """
 
         return (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * self.x_range**((self.v_1 /2) -1)) \
@@ -417,8 +498,19 @@ class F_rv:
     def plot_pdf(self, cv_probability=False):
 
         """
-        this function takes a given F random variable, uses the pdf that
+        This function takes a given F random variable, uses the pdf that
         was previously calculated, and plots it.
+        
+        Parameters
+        ----------
+        cv_probability : bool, default False. the critical value probability 
+        that determines the value the plot is shaded from. If False, shades 
+        from the mean to positive infinity. If True, shades from the critical 
+        value.
+
+        Returns
+        ----------
+        None, plt object displayed 
         """
 
         plt.title(self.__repr__())
@@ -438,6 +530,14 @@ class F_rv:
         This calculates the probability to the RIGHT of the critical value by
         integrating the area under the distribution from the critical value
         to infinity.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        str, f string with probability
         """
 
         f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2)
