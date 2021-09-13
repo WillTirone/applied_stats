@@ -136,40 +136,43 @@ def discrete_check(X):
     a = np.all(_int_check)
     return a 
     
-#discrete MLE calculations 
-def bernoulli(X): 
-    
-    """MLE of a Bernoulli distribution. 
-    
-    Parameters
-    ----------
-    X : array_like 
-    
-    Returns: 
-    ----------
-    bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution
-    
-    Notes
-    ---------
-    If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
-    
-    References
-    ----------
-    [1] Casella, G., Berger, R. L., "Statistical Inference"
-    Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
-    """
-    
-    _input = np.array(X) 
-    n = len(_input)  
-    discrete_bool = discrete_check(_input)
-    bernoulli_mle = np.mean(X) 
-    
-    if discrete_bool == True:
-        return bernoulli_mle 
-    else:
-        raise ValueError("X must be a discrete data set (only integers)")
+# =============================================================================
+# unclear if this is correct or not
+# #discrete MLE calculations 
+# def bernoulli(X): 
+#     
+#     """MLE of a Bernoulli distribution. 
+#     
+#     Parameters
+#     ----------
+#     X : array_like 
+#     
+#     Returns: 
+#     ----------
+#     bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution
+#     
+#     Notes
+#     ---------
+#     If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
+#     
+#     References
+#     ----------
+#     [1] Casella, G., Berger, R. L., "Statistical Inference"
+#     Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
+#     """
+#     
+#     _input = np.array(X) 
+#     n = len(_input)  
+#     discrete_bool = discrete_check(_input)
+#     bernoulli_mle = np.mean(X) 
+#     
+#     if discrete_bool == True:
+#         return bernoulli_mle 
+#     else:
+#         raise ValueError("X must be a discrete data set (only integers)")
+# =============================================================================
 
-def binomial(X):
+def binomial(k, X):
     
     #TODO: fix this with k successes 
     
@@ -177,7 +180,9 @@ def binomial(X):
     
     Parameters
     ----------
-    X : array_like 
+    k : the total number of Bernoulli trials per data point 
+    X : array_like, the data points that represent the number of successes in 
+    a given set of bernoulli trials 
     
     Returns: 
     ----------
@@ -195,9 +200,12 @@ def binomial(X):
 
     _input = np.array(X) 
     n = len(_input)  
+    _total_bernoulli = np.ones(n) * k 
+    _probabilities = X / _total_bernoulli 
     discrete_bool = discrete_check(_input)
-    binomial_mle = np.mean(X) 
-
+    binomial_mle = np.mean(_probabilities)  
+    
+    #maybe add try except block here 
     if discrete_bool == True:
         return binomial_mle 
     else:

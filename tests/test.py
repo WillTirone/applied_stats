@@ -140,21 +140,17 @@ class Test_MLE(unittest.TestCase):
 
 # discrete distributions
 
-    def test_bernoulli(self):
-        a = mle.bernoulli(X_discrete)
-        self.assertEqual(a, 52.22) #
-
     def test_binomial(self):
-        b = mle.binomial(X_discrete)
-        self.assertEqual(b, 52.22)
+        b = mle.binomial(100, X_discrete)
+        self.assertEqual(round(b,4), 0.5222) #p-hat
 
     def test_geometric(self):
         c = round(mle.geometric(X_discrete),5)
-        self.assertEqual(c, 0.01915)
+        self.assertEqual(c, 0.01915)#p-hat
 
     def test_poisson(self):
         d = mle.poisson(X_discrete)
-        self.assertEqual(d, 52.22)
+        self.assertEqual(d, 52.22)#lambda-hat
 
 
 if __name__ == '__main__':
