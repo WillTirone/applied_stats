@@ -1,9 +1,9 @@
 import math as m
 import random as r
-import numpy as np
 
 import continuous_distributions as st
 
+#following examples on p. 11 / 31 of hyp testing notes 
 class norm_hyp(st.Norm_rv):
 
     def __init__(self, mean, variance, H0, HA, test_type='simple'):
@@ -68,6 +68,8 @@ class norm_hyp(st.Norm_rv):
 
         self.z = (x - self.mean) / (self.variance)
         return self.z
+
+#unfinished, come back to this at some point
 
 # based on example on p. 2 of hyp testing notes
 class gen_test:

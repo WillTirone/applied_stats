@@ -77,7 +77,6 @@ def exponential(X):
     [2] Tone, MAT 562: Mathematical Statistics notes, U of L
     """
 
-    n = len(X)
     exponential_mle = np.mean(X)
     
     return exponential_mle
