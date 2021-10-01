@@ -133,43 +133,7 @@ def discrete_check(X):
 
     _int_check = np.equal(np.mod(X,1),0)
     a = np.all(_int_check)
-    return a 
-    
-# =============================================================================
-# unclear if this is correct or not
-# #discrete MLE calculations 
-# def bernoulli(X): 
-#     
-#     """MLE of a Bernoulli distribution. 
-#     
-#     Parameters
-#     ----------
-#     X : array_like 
-#     
-#     Returns: 
-#     ----------
-#     bernoulli_mle : MLE calculation for p-hat for Bernoulli distribution
-#     
-#     Notes
-#     ---------
-#     If x1,x2,...xn ~iid~ BER(p), then the MLE, p-hat, is X-bar
-#     
-#     References
-#     ----------
-#     [1] Casella, G., Berger, R. L., "Statistical Inference"
-#     Belmont (California): Brooks/Cole Cengage Learning pp 317-318 (2017) 
-#     """
-#     
-#     _input = np.array(X) 
-#     n = len(_input)  
-#     discrete_bool = discrete_check(_input)
-#     bernoulli_mle = np.mean(X) 
-#     
-#     if discrete_bool == True:
-#         return bernoulli_mle 
-#     else:
-#         raise ValueError("X must be a discrete data set (only integers)")
-# =============================================================================
+    return a
 
 def binomial(k, X):
     
@@ -233,8 +197,7 @@ def geometric(X):
     [2] Tone, MAT 562: Mathematical Statistics notes, U of L 
     """
 
-    _input = np.array(X) 
-    n = len(_input)  
+    _input = np.array(X)
     discrete_bool = discrete_check(_input)
     geo_mle = 1 / np.mean(X)
 
@@ -244,7 +207,7 @@ def geometric(X):
         raise ValueError("X must be a discrete data set (only integers)") 
 
 def poisson(X):
-    
+
     """MLE of a Poisson distribution.
 
     Parameters
@@ -271,19 +234,13 @@ def poisson(X):
     """
 
     _input = np.array(X) 
-    n = len(_input)  
     discrete_bool = discrete_check(_input)
     poisson_mle = np.mean(X) 
     
     if discrete_bool == True:
         return poisson_mle 
     else:
-        raise ValueError("X must be a discrete data set (only integers)") 
-
-
-    
-    
-    
+        raise ValueError("X must be a discrete data set (only integers)")
     
     
     

@@ -126,7 +126,6 @@ class gen_test:
             ----------
             """
 
-            ## BUG: for some reason, fails if sample size is 1 
             sample = r.sample(self.data, n)
             acceptance_region = {accept_left, accept_right}
             rejection_region = (set(i for i in range(1, len(self.data)))
@@ -134,8 +133,13 @@ class gen_test:
             sample_count = sample.count(counter)
 
             if sample_count in acceptance_region:
-                decision = f'Do not reject H0. Count is {sample_count}'
+                decision = (
+                    f'Do not reject the null hypothesis of : {self.H0}. Count'
+                    f' is {sample_count}'
+                    )
             if sample_count in rejection_region:
-                decision = f'Reject the H0. Count is {sample_count}'
-
+                decision = (
+                    f'Reject the null hypothesis of {self.H0}.'
+                    f' Count is {sample_count}'
+                    )
             return decision

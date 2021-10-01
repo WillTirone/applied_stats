@@ -3,12 +3,12 @@ import math as m
 import sys
 import os
 
-#only necessary while the module is not installed in pckgs
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 import numpy as np
 from scipy import integrate
 from scipy.special import beta
+
+#only necessary while the module is not installed in pckgs
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from applied_stats import continuous_distributions as stats
 from applied_stats import mle
@@ -152,6 +152,15 @@ class Test_MLE(unittest.TestCase):
         d = mle.poisson(X_discrete)
         self.assertEqual(d, 52.22)#lambda-hat
 
+class Test_Hypotheses(unittest.TestCase):
+    
+    def test_gen_test(self):
+        pass
+    
+class Test_conf_intervals(unittest.TestCase):
+    
+    def test_norm_ci(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

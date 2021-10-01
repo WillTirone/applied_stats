@@ -74,4 +74,4 @@ Follow these examples to start plotting and calculating probabilities. Various e
 
 ## Tests
 
-Run the tests from the command line with `python test.py`
+Run the tests from the command line with `python test.py -v`

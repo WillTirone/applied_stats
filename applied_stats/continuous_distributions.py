@@ -538,6 +538,12 @@ class F_rv:
         Returns
         ----------
         str, f string with probability
+        
+        Notes
+        ----------
+        Note that it will integrate from the critical value to positive inf.
+        However, if none is given, it will integrate from 0 which will give 
+        a probability of 1. 
         """
 
         f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2)
