@@ -28,6 +28,8 @@ Follow these examples to start plotting and calculating probabilities. Various e
 >>> a.plot_pdf()
 >>> a.probability_calc()
 ```
+
+Note: pypi has some difficulty rendering the below plot images, they can be viewed on GitHub.
 ![link](https://github.com/WillTirone/applied_stats/blob/main/output_images/N(0%2C1)_plot.png)
 
 ```python
@@ -51,8 +53,8 @@ Follow these examples to start plotting and calculating probabilities. Various e
 ```python 
 >>> from stats_tools import mle 
 >>> a = [1,3,2,5,6,7,2,3,4,5]
->>> mle.binomial(a)
->>> 3.8
+>>> mle.binomial(10, a)
+>>> 0.38
 
 >>> b = [1.2,4.3,2.3,6.8,2.4,3.6]
 >>> mle.exponential(b) 

@@ -8,7 +8,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
       name="applied_stats",
-      version='0.1.0',
+      version='1.0.0',
       url='https://github.com/WillTirone/applied_stats',
       author='William Tirone',
       author_email='will.tirone1@gmail.com',
