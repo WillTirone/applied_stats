@@ -18,7 +18,7 @@ This has been tested on Windows 10 and Ubuntu 21.04; will test on macOS soon.
 
 ## Usage
 
-If you prefer a video walkthrough, I have one posted here: ![Walkthrough Video](https://youtu.be/jTxofcAS8IY)
+If you prefer a video walkthrough, I have one posted here: [Walkthrough Video](https://youtu.be/jTxofcAS8IY)
 
 Follow these examples to start plotting and calculating probabilities. Various examples, including the ones below, can also be found in the [Demonstration Jupyter Notebook](https://github.com/WillTirone/applied-stats_examples/blob/main/Demonstration.ipynb)
 
@@ -54,7 +54,7 @@ Note: pypi has some difficulty rendering the below plot images, they can be view
 ### Calculate the numeric MLE of several common distributions: 
 
 ```python 
->>> from stats_tools import mle 
+>>> from applied_stats import mle 
 >>> a = [1,3,2,5,6,7,2,3,4,5]
 >>> mle.binomial(10, a)
 >>> 0.38
