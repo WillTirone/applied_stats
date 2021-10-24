@@ -213,7 +213,8 @@ class ChiSq_rv:
         
         """
 
-        return (1/(m.gamma(self.df/2)*2**(self.df/2)))*self.x_range**((self.df/2)-1)*m.e**(-self.x_range/2)
+        return ((1/(m.gamma(self.df/2)*2**(self.df/2)))*
+                self.x_range**((self.df/2)-1)*m.e**(-self.x_range/2))
 
 
     def plot_pdf(self, left_cv=0, right_cv=0, cv_probability=False, two_tail=False):
@@ -368,9 +369,11 @@ class t_rv:
         To check that it is, in fact, a pdf, the y values must integrate to 1.
         """
 
-        return m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**((self.df + 1) / 2))
+        return (m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * 
+                m.gamma(self.df / 2) * (1 + ((self.x_range**2)/self.df))**
+                ((self.df + 1) / 2)))
 
-    def plot_pdf(self, cv_probability=False):
+    def plot_pdf(self, cv_probability=True, two_tail=False):
 
         """
         This function takes a given t random variable, uses the pdf that
@@ -378,24 +381,41 @@ class t_rv:
 
         Parameters
         ----------
-        cv_probability : bool, default False. the critical value probability 
+        cv_probability : bool, default True. the critical value probability 
         that determines the value the plot is shaded from. If False, shades 
         from the df to positive infinity. If True, shades from the critical 
         value.
+        
+        two_tail : bool, default False. If true, will fill lower and upper 
+        tails 
 
         Returns
         ----------
         None, plt object displayed
         """
 
+        def _right_fill_helper(fill_from):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_from, 
+                              where=(self.x_range>fill_from), color='purple',
+                              alpha=0.3)
+
+        def _left_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to, 
+                              where=(self.x_range<fill_to), color='purple',
+                              alpha=0.3)
+
         plt.title(self.__repr__())
         plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='purple',linewidth=3)
-        if cv_probability==False:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.df,
-                          where=(self.x_range>self.df), color='purple', alpha=0.3)
+
+        #TODO: limitation on this plotting symmetrically
+        if (cv_probability==True) & (two_tail==False):
+            _right_fill_helper(self.crit_value)
+        elif (cv_probability==True) & (two_tail==True):
+            _right_fill_helper(self.crit_value)
+            _left_fill_helper(-self.crit_value)
         else:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
-                          where=(self.x_range>self.crit_value), color='purple', alpha=0.3)
+            raise ValueError('please check the default arguments')
+
         plt.tight_layout()
         plt.show()
 
@@ -446,7 +466,7 @@ class F_rv:
     
     """
 
-    def __init__(self, v_1, v_2, crit_value=0.0):
+    def __init__(self, v_1, v_2, left_cv=0.0, right_cv=1.0):
 
         if v_1 >0:
             self.v_1 = v_1
@@ -464,13 +484,14 @@ class F_rv:
             else:
                 raise ValueError('with v_2 < 5, Var(X) DNE')
 
-        self.crit_value = float(crit_value)
+        self.left_cv = float(left_cv)
+        self.right_cv = float(right_cv)
         self.x_range = np.linspace(0, 2*self.v_2, 2000)
 
     def __repr__(self):
         return f"""F(v_1,v_2) distribution with v_1={self.v_1} , v_2={self.v_2}
-        degrees of freedom, mean {round(self.mean,2)}, and critical value
-        {self.crit_value}"""
+        degrees of freedom, mean {round(self.mean,2)}, left critical value
+        {self.left_cv} and right critical value {self.right_cv}"""
 
     def pdf(self):
 
@@ -495,7 +516,7 @@ class F_rv:
         return (m.gamma((self.v_1 + self.v_2) / 2) * (self.v_1 / self.v_2)**(self.v_1 / 2) * self.x_range**((self.v_1 /2) -1)) \
         / (m.gamma(self.v_1 / 2) * m.gamma(self.v_2 / 2) * (1 + (self.v_1 /self.v_2)*self.x_range)**((self.v_1 + self.v_2) / 2))
 
-    def plot_pdf(self, cv_probability=False):
+    def plot_pdf(self, cv_probability=True, two_tail=False):
 
         """
         This function takes a given F random variable, uses the pdf that
@@ -507,20 +528,37 @@ class F_rv:
         that determines the value the plot is shaded from. If False, shades 
         from the mean to positive infinity. If True, shades from the critical 
         value.
+        
+        two_tail : bool, default False. If true, will fill both lower and 
+        upper tails 
 
         Returns
         ----------
         None, plt object displayed 
         """
 
+        def _right_fill_helper(fill_from):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_from,
+                              where=(self.x_range > fill_from),
+                              color='forestgreen', alpha=0.3)
+            
+        def _left_fill_helper(fill_to):
+            plt.fill_betweenx(self.pdf(), self.x_range, x2=fill_to,
+                              where=(self.x_range < fill_to),
+                              color='forestgreen', alpha=0.3)
+
+        #plotting fn over the x range
         plt.title(self.__repr__())
         plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='forestgreen',linewidth=3)
-        if cv_probability==False:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.mean,
-                          where=(self.x_range>self.mean), color='forestgreen', alpha=0.3)
+
+        if (cv_probability==True) & (two_tail==False):
+            _right_fill_helper(self.right_cv)
+        elif (cv_probability==True) & (two_tail==True):
+            _right_fill_helper(self.right_cv)
+            _left_fill_helper(self.left_cv)
         else:
-            plt.fill_betweenx(self.pdf(), self.x_range, x2=self.crit_value,
-                          where=(self.x_range>self.crit_value), color='forestgreen', alpha=0.3)
+            raise ValueError('please check the default arguments')
+
         plt.tight_layout()
         plt.show()
 
