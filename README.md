@@ -80,3 +80,4 @@ Note: pypi has some difficulty rendering the below plot images, they can be view
 ## Tests
 
 Run the tests from the command line with `python test.py -v`
+With pytest installed, for more detail, run `pytest -v test.py`

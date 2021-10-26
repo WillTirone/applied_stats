@@ -135,10 +135,11 @@ class Norm_rv:
         self.probability, self.error_est = integrate.quad(f,-np.inf,self.crit_value)
 
         if two_tail == False:
-            return f"P(X<crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+            return (f"P(X<self.crit_val) is {round(self.probability,5)}" 
+                    "with an error estimate of {round(self.error_est,5)}")
         elif two_tail == True:
             return (
-            f'P(X < left_crit value) & P(X > right_crit_value) is '
+            f'P(X < {-self.crit_val}) & P(X > {self.crit_val}) is '
             f' {2*round(self.probability,5)} with an error estimate of '
             f'{round(self.error_est,5)}'
             )
@@ -305,10 +306,11 @@ class ChiSq_rv:
             self.total_probability = self.left_probability + self.right_probability
             self.total_error = self.left_error_est + self.right_error_est
 
-            return ( f'P(X < left_critical_value) is {round(self.left_probability,5)} and P(X > right_crit_value) is '
-            f'{round(self.right_probability,5)}. Total probability is '
-            f'{round(self.total_probability,5)} with total error estimate '
-            f'{round(self.total_error)}')
+            return ( f'P(X < {self.left_cv}) is {round(self.left_probability,5)} '
+                    f'and P(X > self.right_cv) is '
+                    f'{round(self.right_probability,5)}. Total probability is '
+                    f'{round(self.total_probability,5)} with total error estimate '
+                    f'{round(self.total_error)}')
 
 class t_rv:
 
@@ -405,9 +407,9 @@ class t_rv:
                               alpha=0.3)
 
         plt.title(self.__repr__())
-        plt.plot(self.x_range, self.pdf(),linestyle='dashed', color='purple',linewidth=3)
+        plt.plot(self.x_range, self.pdf(),
+                 linestyle='dashed', color='purple',linewidth=3)
 
-        #TODO: limitation on this plotting symmetrically
         if (cv_probability==True) & (two_tail==False):
             _right_fill_helper(self.crit_value)
         elif (cv_probability==True) & (two_tail==True):
@@ -420,7 +422,7 @@ class t_rv:
         plt.show()
 
 
-    def probability_calc(self):
+    def probability_calc(self, two_tail=False):
 
         """
         This calculates the probability to the RIGHT of the critical value by
@@ -429,16 +431,28 @@ class t_rv:
         
         Parameters
         -----------
-        self
+        two_tail : bool, default False. If two_tail is True, it will simply multiply the
+        probability by 2. This is not too flexible yet, but will work for basic cases.
 
         Returns:
         -----------
         str, f string with probability
         """
 
-        f = lambda x: m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * m.gamma(self.df / 2) * (1 + ((x**2)/self.df))**((self.df + 1) / 2))
+        f = lambda x: (m.gamma((self.df+1)/2) / (m.sqrt(m.pi * self.df) * 
+                       m.gamma(self.df / 2) * (1 + ((x**2)/self.df))**
+                       ((self.df + 1) / 2)))
         self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
-        return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+        
+        if two_tail == False:
+            return (f"P(X>crit_val) is {round(self.probability,5)} "
+                   f"with an error estimate of {round(self.error_est,5)}")
+        elif two_tail == True:
+            return (
+            f'P(X < {-self.crit_value}) & P(X > {self.crit_value}) is '
+            f'{2*round(self.probability,5)} with an error estimate of '
+            f'{round(self.error_est,5)}'
+            )
 
 
 class F_rv:
@@ -562,7 +576,7 @@ class F_rv:
         plt.tight_layout()
         plt.show()
 
-    def probability_calc(self):
+    def probability_calc(self,two_tail=False):
 
         """
         This calculates the probability to the RIGHT of the critical value by
@@ -572,21 +586,35 @@ class F_rv:
         Parameters
         ----------
         self
+        
+        two_tail : bool, used in combination with cv_probability will 
+        plot and shade both tails of an F distribution 
 
         Returns
         ----------
         str, f string with probability
-        
-        Notes
-        ----------
-        Note that it will integrate from the critical value to positive inf.
-        However, if none is given, it will integrate from 0 which will give 
-        a probability of 1. 
         """
 
         f =  lambda x: ((self.v_2**(self.v_2/2) * self.v_1**(self.v_1/2)
                          * x**(self.v_1/2 -1))/
                         ((self.v_2 +self.v_1*x)**((self.v_1 + self.v_2)/2) *
                         beta(self.v_1/2, self.v_2/2)))
-        self.probability, self.error_est = integrate.quad(f,self.crit_value,np.inf)
-        return f"P(X>crit_val) is {round(self.probability,5)} with an error estimate of {round(self.error_est,5)}"
+        
+        #calculate the probabilities.
+        if two_tail == False:
+            self.right_probability, self.right_error_est = integrate.quad(f,self.right_cv,np.inf)
+            return ( f'P(X > {self.right_cv}) is {round(self.right_probability,5)} with an error estimate of '
+            f'{round(self.right_error_est,5)}')
+        else:
+            self.left_probability, self.left_error_est = integrate.quad(f, 0, self.left_cv) #left tail
+            self.right_probability, self.right_error_est = integrate.quad(f, self.right_cv, np.inf) #right tail
+
+            self.total_probability = self.left_probability + self.right_probability
+            self.total_error = self.left_error_est + self.right_error_est
+
+            return ( f'P(X < {self.left_cv}) is {round(self.left_probability,5)} '
+                    f'and P(X > {self.right_cv}) is '
+                    f'{round(self.right_probability,5)}. Total probability is '
+                    f'{round(self.total_probability,5)} with total error estimate '
+                    f'{round(self.total_error)}')
+                
