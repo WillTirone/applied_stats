@@ -99,12 +99,8 @@ class Test_Distributions(unittest.TestCase):
 
 
         #test the probability calculation
-        
-        #TODO: fix calculation with two tails
-# =============================================================================
-#         d.probability_calc()
-#         self.assertAlmostEqual(round(d.probability,2), 0.33)
-# =============================================================================
+        d.probability_calc()
+        self.assertAlmostEqual(round(d.right_probability,2), 0.5)
 
         #test that it is a pdf by integrating, it must = 1
         f =  lambda x: ((d.v_2**(d.v_2/2) * d.v_1**(d.v_1/2) *
