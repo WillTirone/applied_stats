@@ -20,14 +20,15 @@ class Norm_rv:
     pp 166 - 169 (2008).
     """
 
-    def __init__(self, mean, variance, crit_value=0.0):
+    def __init__(self, mean, variance, left_cv=0.0,right_cv=1.0):
         self.mean = float(mean)
         self.sigma = float(m.sqrt(variance))
         if variance >0 and variance < np.inf:
             self.variance = variance
         else:
             raise ValueError('Enter a variance between 0 and infinity')
-        self.crit_value = float(crit_value)
+        self.left_cv = float(left_cv)
+        self.right_cv = float(right_cv)
 
         #adding a scale as an int from variance to scale the plot properly and display the graph
         plot_scale = int(self.variance)
@@ -36,7 +37,9 @@ class Norm_rv:
                                    round(500*plot_scale))
 
     def __repr__(self):
-        return f"Normal distribution with mean {self.mean}, variance {self.variance}, and critical value {self.crit_value}"
+        return (f"Normal distribution with mean {self.mean}, variance "
+                f"{self.variance}, left critical value {self.left_cv} "
+                f"and right critical value {self.right_cv}")
 
     def pdf(self):
 
@@ -67,10 +70,11 @@ class Norm_rv:
 
         Parameters
         ----------
-        cv_probability : bool, default False. the critical value probability that determines the value the plot
-        is shaded up to. If False, shades up to the mean. If True, shades up to the critical value.
-
-        two_tail : bool, default False
+        two_tail : bool, default False. If true, will allow two tailed plotting
+        
+        cv_probability : bool, default False. By default, will fill up to the 
+        mean. If changed to True along with two_tail, will plot up to the left 
+        critical value and right critical value. 
 
         Returns
         ----------
@@ -100,13 +104,13 @@ class Norm_rv:
         if cv_probability==False:
             _left_fill_helper(self.mean)
         elif (two_tail == True) & (cv_probability==True):
-            _left_fill_helper(self.crit_value)
-            _right_fill_helper(-self.crit_value)
+            _left_fill_helper(self.left_cv)
+            _right_fill_helper(self.right_cv)
 
         plt.tight_layout()
         plt.show()
 
-    def probability_calc(self, two_tail=False):
+    def probability_calc(self, two_tail=False, cv_probability=True):
 
         """
         This calculates either the probability to the left or both the right and
@@ -131,18 +135,22 @@ class Norm_rv:
         all the other distributions as well.
         """
 
-        f = lambda x: (1/(self.sigma*m.sqrt(2*m.pi)))*m.e**((-1/2)*((x-self.mean)/self.sigma)**2)
-        self.probability, self.error_est = integrate.quad(f,-np.inf,self.crit_value)
+        f = lambda x: ((1/(self.sigma*m.sqrt(2*m.pi)))*
+                       m.e**((-1/2)*((x-self.mean)/self.sigma)**2))
 
         if two_tail == False:
-            return (f"P(X<self.crit_val) is {round(self.probability,5)}" 
-                    "with an error estimate of {round(self.error_est,5)}")
-        elif two_tail == True:
+            self.left_probability, self.left_error_est = integrate.quad(f,-np.inf,self.mean)                                              
+            return (f"P(X<{self.left_cv}) is {round(self.left_probability,5)}"
+                    f"with an error estimate of {round(self.left_error_est,5)}")
+        elif (two_tail == True) & (cv_probability==True):
+            self.left_probability, self.left_error_est = integrate.quad(f,-np.inf,self.left_cv)  
+            self.right_probability, self.right_error_est = integrate.quad(f,self.right_cv, np.inf)  
+            self.total_probability = self.left_probability + self.right_probability
+            self.total_error = self.left_error_est + self.right_error_est
             return (
-            f'P(X < {-self.crit_val}) & P(X > {self.crit_val}) is '
-            f' {2*round(self.probability,5)} with an error estimate of '
-            f'{round(self.error_est,5)}'
-            )
+            f'P(X < {self.left_cv}) & P(X > {self.right_cv}) is '
+            f' {self.total_probability} with an error estimate of '
+            f'{round(self.total_error,5)}')
 
 class ChiSq_rv:
 

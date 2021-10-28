@@ -31,7 +31,7 @@ class Test_Distributions(unittest.TestCase):
 
         #test the probability calculation
         a.probability_calc()
-        self.assertAlmostEqual(a.probability, 0.5)
+        self.assertAlmostEqual(a.left_probability, 0.5)
 
         #test that it is a pdf by integrating, it must = 1
         f = lambda x: ((1/(a.sigma*m.sqrt(2*m.pi)))*
@@ -43,7 +43,12 @@ class Test_Distributions(unittest.TestCase):
         self.assertEqual(a.mean,0)
         self.assertEqual(a.variance,1)
         self.assertTrue(a.variance < np.infty)
-
+        
+        #two tailed test 
+        a_two_tail = stats.Norm_rv(10,4,left_cv=7, right_cv=13)
+        a_two_tail.probability_calc(two_tail=True, cv_probability=True)
+        self.assertAlmostEqual(round(a_two_tail.total_probability,5), 0.13361)
+        
     def test_chisq(self):
 
         #test an instance
